@@ -1,0 +1,143 @@
+#!/bin/bash
+
+
+yellow="\033[0;33m"
+ungu="\033[0;35m"
+Red="\033[91;1m"
+Xark="\033[0m"
+BlueCyan="\033[5;36m"
+Cyan="\033[96;1m"
+Purple="\033[95;1m"
+Green="\033[92;1m"
+WhiteBe="\033[5;37m"
+GreenBe="\033[5;32m"
+YellowBe="\033[5;33m"
+BlueBe="\033[5;34m"
+# . Liner 
+function baris_panjang() {
+  echo -e "\e[33;1m ——————————————————————————————————— ${Xark} "
+}
+
+function Lunatic_Banner() {
+clear
+baris_panjang
+echo -e "\e[92;1m           ANGGUNvpn TUNNELING      ${Xark} "
+baris_panjang
+}
+
+function Sc_Credit(){
+sleep 1
+baris_panjang
+echo -e "\033[1;33m      Terimakasih Telah Menggunakan \033[0m"
+echo -e "\033[1;33m             Script Credit \033[0m"
+echo -e "\033[1;33m           ANGGUNvpn Tunneling  \033[0m"
+baris_panjang
+exit 1
+}
+
+# jalankan loading : sleep 0.8 & loading $!
+loading() {
+  local pid=$1
+  local delay=0.1
+  local spin='-\|/'
+
+  while ps -p $pid > /dev/null; do
+    local temp=${spin#?}
+    printf "[%c] " "$spin"
+    local spin=$temp${spin%"$temp"}
+    sleep $delay
+    printf "\b\b\b\b\b\b"
+  done
+
+  printf "    \b\b\b\b"
+}
+
+
+cd /root/
+rm -rf m-ssh
+rm -rf m-tro
+rm -rf m-vme
+rm -rf m-vle
+rm -rf m-ssr
+rm -rf cek-ssh
+rm -rf cek-tro
+rm -rf cek-ssr
+rm -rf cek-vle
+rm -rf cek-vme
+rm -rf del-ssh
+rm -rf del-tro
+rm -rf del-vle
+rm -rf del-vme
+rm -rf del-ssr
+rm -rf add-ssh
+rm -rf add-ssr
+rm -rf add-tro
+rm -rf add-vle
+rm -rf add-vme
+rm -rf renew-ssh
+rm -rf renew-ssr
+rm -rf renew-vle
+rm -rf renew-vme
+rm -rf renew-tro
+rm -rf trial-ssh
+rm -rf trial-ssr
+rm -rf trial-vme
+rm -rf trial-vle
+rm -rf trial-tro
+rm -rf user-ssh
+rm -rf user-ssr
+rm -rf user-tro
+rm -rf user-vme
+rm -rf user-vle
+rm -rf welcome
+rm -rf xp
+rm -rf ganti-ip-ssh
+rm -rf ganti-ip-vmess
+rm -rf ganti-ip-trojan
+rm -rf ganti-ip-vless
+rm -rf member-ssh
+rm -rf member-vme
+rm -rf member-vle
+rm -rf member-ssr
+rm -rf member-tro
+rm -rf lock
+rm -rf unlock
+rm -rf fixhap
+rm -rf fixcert
+rm -rf delexp
+rm -rf killtrial
+rm -rf change-domain
+rm -rf add-bot-notif
+rm -rf create-bot-notif
+rm -rf change-vmess-qouta
+rm -rf change-vless-qouta
+rm -rf change+trojan-qouta
+rm -rf change-limit-xray
+rm -rf ceklim
+rm -rf mullog
+rm -rf hapus-bot
+rm -rf kill-trial
+rm -rf m-bkp
+rm -rf m-ssh
+rm -rf m-tro
+rm -rf m-tro
+rm -rf m-vle
+rm -rf m-vme
+rm -rf m-ssr
+rm -rf m-ssr
+rm -rf xtra-menu
+rm -rf others
+rm -rf m-panel
+rm -rf mbot
+rm -rf m-bot
+rm -rf prot
+rm -rf run
+rm -rf reset
+
+sleep 0.8 & loading $!
+echo ""
+Sc_Credit
+echo ""
+echo ""
+read -p "Back To Menu"
+menu

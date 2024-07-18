@@ -1,0 +1,42 @@
+#!/bin/bash
+
+clear
+
+function Garis() {
+echo -e "\e[33;1m ############################## \e[0m"
+}
+
+
+function Display_Menu() {
+Garis
+echo -e ""
+echo -e "\e[37;1m 1. UDP HYSTERIA \e[0m"
+echo -e "\e[37;1m 2. UDP CUSTOM \e[0m"
+echo -e "\e[31;1m x. EXIT \e[0m"
+echo -e ""
+Garis
+}
+
+function Note_Rulles() {
+echo -e "\e[37;1m Untuk Udp Hysteria Hanya-\e[0m"
+echo -e "\e[37;1m Support Di Apk Http Injector\e[0m"
+Garis
+echo -e "\e[37;1m Untuk Udp Custom Support All-\e[0m"
+echo -e "\e[37;1m Apk, Yg Sudah Ada Udp Custom Nya\e[0m"
+Garis
+}
+
+Select_Display() {
+echo -e ""
+read -p "Select From Option 1-2 or x : " Bangsat
+case $Bangsat in
+1) clear ; udp-hysteria ;;
+2) clear ; udp-custom ;;
+*) menu ;;
+esac
+}
+
+
+Display_Menu
+Note_Rulles
+Select_Display

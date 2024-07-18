@@ -1,0 +1,74 @@
+#!/bin/bash
+
+send_logg() {
+  TEKS="
+==========================="
+Lock Account Multilogin
+===========================
+Username: ${user}
+Login IP: ${cekcek} / ${iplimit}
+===========================
+Akun Terkunci Selama 15menit
+jangan nakal makanya tai
+untung di lock, kalau di kill?
+CEMAS KAU DEEK
+==========================="
+CHATID=$(grep -E "^#bot# " "/etc/bot/.bot.db" | cut -d ' ' -f 3)
+KEY=$(grep -E "^#bot# " "/etc/bot/.bot.db" | cut -d ' ' -f 2)
+TIME="10"
+URL="https://api.telegram.org/bot$KEY/sendMessage"
+
+  curl -s --max-time $TIME -d "chat_id=$CHATID&disable_web_page_preview=1&text=$TEKS&parse_mode=html" $URL >/dev/null
+  clear
+}
+
+function ssrlock(){
+echo -n > /var/log/xray/accessssr.log
+# Fungsi untuk mendapatkan log xray
+get_v2ray_log() {
+  # mendapatkan akses log X-ray
+   grep -E '^(?:[0-9]{1,3}\.){3}[0-9]{1,3}' /var/log/xray/accessssr.log
+  # ...
+  # Pastikan perintah ini mengembalikan daftar IP yang terhubung
+}
+
+# Fungsi untuk menghentikan akun vmess/X-ray
+stop_v2ray_account() {
+  # Ganti dengan perintah yang sesuai untuk menghentikan akun xray
+  systemctl stop xray
+  # ...
+}
+
+# Fungsi untuk memulai kembali akun vmess/X-ray
+start_v2ray_account() {
+  # Ganti dengan perintah yang sesuai untuk memulai kembali akun V2Ray/X-ray/Trojan
+systemctl restart xray
+}
+
+start_at_now() {
+systemctl restart atd
+}
+
+# Loop untuk memeriksa setiap akun
+data=( `ls /etc/lunatic/limit/shadowsocks/ip`)
+
+for user in "${data[@]}"
+do
+  iplimit=$(cat /etc/lunatic/limit/shadowsocks/ip/$user)
+  cekcek=$(get_v2ray_log | grep $user | wc -l)
+
+  if [[ $cekcek -gt $iplimit ]]; then
+    send_logg
+    stop_v2ray_account # Hentikan akun
+    start_at_now
+    echo "start_v2ray_account" | at now + 15 minutes > /dev/null # Mulai kembali setelah 15 menit
+  fi
+
+  sleep 0.1
+done
+
+clear
+}
+if [[ ${1} == "ssrlock" ]]; then
+ssrlock
+fi

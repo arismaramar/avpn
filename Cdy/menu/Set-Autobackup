@@ -1,0 +1,117 @@
+#!/bin/bash
+clear
+
+# // color validity
+# // color format 38
+runn='\e[38;5;14m' 
+acc='\e[38;5;146m'
+LO='\e[38;5;162m'
+UK='\e[38;5;99m'  # UNGU KOLOT
+BK='\e[38;5;196m' # BEREM KOLOT 
+R1='\e[38;5;155m' # HEJO SEMU BODAS
+R2='\e[38;5;49m'  # HEJO LIME / APEL
+BC='\e[38;5;195m' # BODAS CERAH PISAN
+HU='\e[38;5;115m' # HEJO SEMU ABU
+UB='\e[38;5;147m' # UNGU KABODASAN
+KT='\e[38;5;187m' # KONENG TARIGU
+Suffix='\e[0m'
+
+
+
+
+
+
+
+
+Set_AutoBackup() {
+clear
+echo -e "\e[97;1m
+================================================
+     [ <= SETTINGS WAKTU AUTOBACKUP => ]
+================================================
+
+[ 1 ] Setiap 30 Menit
+[ 2 ] setiap 60 menit
+[ 3 ] setiap 2 jam
+[ 4 ] setiap 3 jam
+[ 5 ] setiap 4 jam
+[ 6 ] setiap 5 jam
+[ x ] Exit
+
+================================================
+\e[0m"
+
+
+read -p " Just Input : " luna
+case $luna in
+1)
+clear
+# 30 menit
+
+echo "*/30 * * * *  root /usr/local/sbin/otwbackup" >>/etc/crontab
+================================================
+echo -e "\e[32;1m   Succesfully \e[0m"
+echo -e ""
+echo -e "AutoBackup Di Aktifkan setiap : 30 Menit"
+================================================
+;;
+2)
+clear
+# 60 menit
+
+echo "*/59 * * * *  root /usr/local/sbin/otwbackup" >>/etc/crontab
+================================================
+echo -e "\e[32;1m   Succesfully \e[0m"
+echo -e ""
+echo -e "\e[97;1mAutoBackup Di Aktifkan setiap :\e[95;1m 60 Menit \e[0m"
+================================================
+;;
+3)
+clear
+# 2 jam
+
+echo "2 * * * *  root /usr/local/sbin/otwbackup" >>/etc/crontab
+================================================
+echo -e "\e[32;1m   Succesfully \e[0m"
+echo -e ""
+echo -e "\e[97;1mAutoBackup Di Aktifkan setiap :\e[95;1m 2 jam\e[0m"
+================================================
+;;
+4)
+clear
+# 3 jam
+
+echo "3 * * * *  root /usr/local/sbin/otwbackup" >>/etc/crontab
+================================================
+echo -e "\e[32;1m   Succesfully \e[0m"
+echo -e ""
+echo -e "\e[97;1mAutoBackup Di Aktifkan setiap :\e[95;1m 3 jam\e[0m"
+================================================
+;;
+5)
+clear
+# 4 jam
+
+echo "4 * * * *  root /usr/local/sbin/otwbackup" >>/etc/crontab
+================================================
+echo -e "\e[32;1m   Succesfully \e[0m"
+echo -e ""
+echo -e "\e[97;1mAutoBackup Di Aktifkan setiap :\e[95;1m 4 jam\e[0m"
+================================================
+;;
+6)
+clear
+# 5 jam
+
+echo "5 * * * *  root /usr/local/sbin/otwbackup" >>/etc/crontab
+================================================
+echo -e "\e[32;1m   Succesfully \e[0m"
+echo -e ""
+echo -e "\e[97;1mAutoBackup Di Aktifkan setiap :\e[95;1m 5 jam\e[0m"
+================================================
+;;
+*) exit ;;
+esac
+}
+
+Set_AutoBackup

@@ -1,0 +1,130 @@
+#!/bin/bash
+# Color
+RED='\033[0;31m'
+NC='\033[0m'
+GREEN='\033[0;32m'
+ORANGE='\033[0;33m'
+BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'
+LIGHT='\033[0;37m'
+clear
+
+yellow="\033[0;33m"
+ungu="\033[0;35m"
+Red="\033[91;1m"
+Xark="\033[0m"
+BlueCyan="\033[5;36m"
+WhiteBe="\033[5;37m"
+GreenBe="\033[5;32m"
+YellowBe="\033[5;33m"
+BlueBe="\033[5;34m"
+# . Liner 
+function Liner() {
+  echo -e "\e[33;1m ——————————————————————————————————— ${Xark} "
+}
+
+function Lunatic_Banner() {
+clear
+Liner
+echo -e "\[92;1m           ANGGUNvpn TUNNELING      ${Xark} "
+Liner
+}
+
+function Sc_Credit(){
+sleep 1
+Liner
+echo -e "\033[1;33m      Terimakasih Telah Menggunakan \033[0m"
+echo -e "\033[1;33m             Script Credit \033[0m"
+echo -e "\033[1;33m           ANGGUNvpn Tunneling  \033[0m"
+Liner
+exit 1
+}
+
+# jalankan loading : sleep 0.8 & loading $!
+loading() {
+  local pid=$1
+  local delay=0.1
+  local spin='-\|/'
+
+  while ps -p $pid > /dev/null; do
+    local temp=${spin#?}
+    printf "[%c] " "$spin"
+    local spin=$temp${spin%"$temp"}
+    sleep $delay
+    printf "\b\b\b\b\b\b"
+  done
+
+  printf "    \b\b\b\b"
+}
+
+
+NUMBER_OF_CLIENTS=$(grep -c -E "^#vle-user# " "/etc/xray/vle.json")
+	if [[ ${NUMBER_OF_CLIENTS} == '0' ]]; then
+        Lunatic_Banner
+		Liner
+		echo ""
+		echo -e "${Red}  Name Is wrong !! ${Xark} "
+		echo ""
+		Liner
+		read -p "Press any key to back on menu"
+        menu
+	fi
+
+	clear
+	Liner
+    echo -e "${ungu}         DELETE VLESS     ${Xark} "
+    Liner
+ 
+ 
+ # Baca nama pengguna dari vle.json, pisahkan username dan tanggal expired, lalu hilangkan duplikat
+users=$(grep -E "^#vle-user# " "/etc/xray/vle.json" | sed -E 's/^#vle-user# ([^ ]+).*/\1/' | awk '!seen[$0]++')
+
+
+# Tampilkan nama pengguna dengan nomor urut
+############################################
+echo ""
+Liner
+echo ""
+i=1
+for user in $users; do
+    echo "$i) $user"
+    ((i++))
+done
+echo ""
+Liner
+echo ""
+############################################
+read -p " Just input Number: " number
+
+# Dapatkan username berdasarkan nomor yang dipilih
+selected_user=$(echo "$users" | sed -n "${number}p")
+
+if [ -z "$selected_user" ]; then
+    echo -e "\e[31;1m number is missing or incorrect\e[0m"
+    exit 1
+
+sleep 0.8 & loading $!
+
+clear
+    else
+    exp=$(grep -wE "^#vle-user# $selected_user" "/etc/xray/vle.json" | cut -d ' ' -f 3 | sort | uniq)
+    sed -i "/^#vle-user# $selected_user $exp/,/^},{/d" /etc/xray/vle.json
+    sed -i "/^#vle# $selected_user $exp/,/^},{/d" /etc/vless/.vless.db
+    rm -rf /etc/vless/$selected_user
+    rm -rf /etc/lunatic/limit/vless/ip/$selected_user
+    rm -rf /detail/vle/$selected_user.txt
+    rm -rf /var/www/html/$selected_user.txt
+    systemctl restart xray > /dev/null 2>&1
+    clear
+Lunatic_Banner
+    Liner
+    echo -e "${GreenBe}Successfully ${Xark}"
+    echo ""
+    echo -e "\e[0;36m Username : $selected_user ${Xark} "
+    echo -e "\e[0;36m Expiry   : $exp ${Xark} "
+    echo ""
+    Liner
+    Sc_Credit
+    echo ""
+    fi

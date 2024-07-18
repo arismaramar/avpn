@@ -1,0 +1,119 @@
+#!/bin/bash
+send_logg() {
+  TEKS="
+Lock Account Multilogin
+===========================
+Username: ${user}
+Login IP: ${iplimit} IP / ${cekcek} IP
+===========================
+Akun DIsable Selama 10 menit
+jangan nakal makanya tai
+untung di Disable, kalau di Mov?
+LEWAT..!! HABIS
+==========================="
+CHATID=$(grep -E "^#bot# " "/etc/bot/.bot.db" | cut -d ' ' -f 3)
+KEY=$(grep -E "^#bot# " "/etc/bot/.bot.db" | cut -d ' ' -f 2)
+TIME="10"
+URL="https://api.telegram.org/bot$KEY/sendMessage"
+
+  curl -s --max-time $TIME -d "chat_id=$CHATID&disable_web_page_preview=1&text=$TEKS&parse_mode=html" $URL >/dev/null
+  clear
+}
+
+function lockvme() {
+    echo -n > /var/log/xray/access.log
+    sleep 60
+    declare -a data=($(ls /etc/lunatic/limit/vmess/ip))
+    for user in "${data[@]}"
+    do
+        iplimit=$(cat /etc/lunatic/limit/vmess/ip/$user)
+        ehh=$(cat /var/log/xray/access.log | grep "$user" | cut -d " " -f 3 | sed 's/tcp://g' | cut -d ":" -f 1 | sort | uniq)
+        cekcek=$(echo -e "$ehh" | wc -l)
+        if [[ $cekcek -gt $iplimit ]]; then
+            exp=$(grep -w "^### $user" "/etc/xray/config.json" | cut -d ' ' -f 3 | sort | uniq)
+            sed -i "/### $user /{n;s/^/#/}" /etc/xray/config.json
+            systemctl restart xray >> /dev/null 2>&1
+            send_log "vmess" "$user" "$iplimit" "$cekcek"
+            echo "unlockxray vmess $user" | at now + 10 minutes
+            systemctl restart xray >> /dev/null 2>&1
+        else
+            echo ""
+        fi
+        sleep 0.1
+    done
+}
+function lockvle() {
+    echo -n > /var/log/xray/access.log
+    sleep 60
+    declare -a data=($(ls /etc/lunatic/limit/vless/ip))
+    for user in "${data[@]}"
+    do
+        iplimit=$(cat /etc/lunatic/limit/vless/ip/$user)
+        ehh=$(cat /var/log/xray/access.log | grep "$user" | cut -d " " -f 3 | sed 's/tcp://g' | cut -d ":" -f 1 | sort | uniq)
+        cekcek=$(echo -e "$ehh" | wc -l)
+        if [[ $cekcek -gt $iplimit ]]; then
+            exp=$(grep -w "^#& $user" "/etc/xray/config.json" | cut -d ' ' -f 3 | sort | uniq)
+            sed -i "/#& $user /{n;s/^/#/}" /etc/xray/config.json
+            systemctl restart xray >> /dev/null 2>&1
+            send_log "vless" "$user" "$iplimit" "$cekcek"
+            echo "unlockxray vless $user" | at now + 10 minutes
+            systemctl restart xray >> /dev/null 2>&1
+        else
+            echo ""
+        fi
+        sleep 0.1
+    done
+}
+function locktro() {
+    echo -n > /var/log/xray/access.log
+    sleep 60
+    declare -a data=($(ls /etc/lunatic/limit/trojan/ip))
+    for user in "${data[@]}"
+    do
+        iplimit=$(cat /etc/lunatic/limit/trojan/ip/$user)
+        ehh=$(cat /var/log/xray/access.log | grep "$user" | cut -d " " -f 3 | sed 's/tcp://g' | cut -d ":" -f 1 | sort | uniq)
+        cekcek=$(echo -e "$ehh" | wc -l)
+        if [[ $cekcek -gt $iplimit ]]; then
+            exp=$(grep -w "^#! $user" "/etc/xray/config.json" | cut -d ' ' -f 3 | sort | uniq)
+            sed -i "/#! $user /{n;s/^/#/}" /etc/xray/config.json
+            systemctl restart xray >> /dev/null 2>&1
+            send_log "trojan" "$user" "$iplimit" "$cekcek"
+            echo "unlockxray trojan $user" | at now + 10 minutes
+            systemctl restart xray >> /dev/null 2>&1
+        else
+            echo ""
+        fi
+        sleep 0.1
+    done
+}
+function lockssr() {
+    echo -n > /var/log/xray/access.log
+    sleep 60
+    declare -a data=($(ls /etc/lunatic/limit/shadowsocks/ip))
+    for user in "${data[@]}"
+    do
+        iplimit=$(cat /etc/lunatic/limit/shadowsocks/ip/$user)
+        ehh=$(cat /var/log/xray/access.log | grep "$user" | cut -d " " -f 3 | sed 's/tcp://g' | cut -d ":" -f 1 | sort | uniq)
+        cekcek=$(echo -e "$ehh" | wc -l)
+        if [[ $cekcek -gt $iplimit ]]; then
+            exp=$(grep -w "^#!# $user" "/etc/xray/config.json" | cut -d ' ' -f 3 | sort | uniq)
+            sed -i "/#!# $user /{n;s/^/#/}" /etc/xray/config.json
+            systemctl restart xray >> /dev/null 2>&1
+            send_log "shadowsocks" "$user" "$iplimit" "$cekcek"
+            echo "unlockxray shadowsocks $user" | at now + 10 minutes
+            systemctl restart xray >> /dev/null 2>&1
+        else
+            echo ""
+        fi
+        sleep 0.1
+    done
+}
+if [[ ${1} == "lockvme" ]]; then
+vmip
+elif [[ ${1} == "lockvle" ]]; then
+vlip
+elif [[ ${1} == "locktro" ]]; then
+trip
+elif [[ ${1} == "lockssr" ]]; then
+ssip
+fi

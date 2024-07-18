@@ -1,0 +1,62 @@
+#!/bin/bash
+clear
+
+runn='\e[38;5;14m' 
+acc='\e[38;5;146m'
+LO='\e[38;5;162m' # PURPLE SANGAR
+UK='\e[38;5;99m'  # UNGU KOLOT
+BK='\e[38;5;196m' # BEREM KOLOT 
+R1='\e[38;5;155m' # HEJO SEMU BODAS
+R2='\e[38;5;49m'  # HEJO LIME / APEL
+BC='\e[38;5;195m' # BODAS CERAH PISAN
+HU='\e[38;5;115m' # HEJO SEMU ABU
+UB='\e[38;5;147m' # UNGU KABODASAN
+KT='\e[38;5;187m' # KONENG TARIGU
+Suffix='\e[0m'
+Xark="\e[0m"
+
+# . Liner 
+function Liner() {
+  echo -e "${LO} ——————————————————————————————————— ${Xark} "
+}
+
+# . Banner
+function Banner() {
+echo -e "${R1}          DETAILS ACCOUNT          \e[0m"
+}
+
+
+
+
+# Baca nama pengguna dari ssr.json, pisahkan username dan tanggal expired, lalu hilangkan duplikat
+users=$(grep -E "^#ssr-user# " "/etc/xray/ssr.json" | sed -E 's/^#ssr-user# ([^ ]+).*/\1/' | awk '!seen[$0]++')
+
+
+# Tampilkan nama pengguna dengan nomor urut
+Liner
+Banner
+Liner
+echo ""
+i=1
+for user in $users; do
+    echo "$i) $user"
+    ((i++))
+done
+
+echo ""
+Liner
+echo ""
+# Minta pengguna memilih nomor
+read -p " Just input Number: " number
+
+# Dapatkan username berdasarkan nomor yang dipilih
+selected_user=$(echo "$users" | sed -n "${number}p")
+
+if [ -z "$selected_user" ]; then
+    echo -e "\e[31;1m number is missing or incorrect\e[0m"
+    exit 1
+fi
+
+# Tampilkan Detail Akun User
+clear
+cat /detail/ssr/$selected_user.txt

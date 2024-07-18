@@ -1,0 +1,17 @@
+#!/bin/bash
+# Menghapus trial ssh setelah waktu habis
+if getent passwd $user > /dev/null 2>&1; then
+    userdel $user > /dev/null 2>&1
+    exp=$(grep -w "^#ssh# $user" "/etc/ssh/.ssh.db" | cut -d ' ' -f 3 | sort | uniq)
+    sed -i "/^### $user $exp /,/^},{/d" /etc/ssh/.ssh.db
+    rm -f /etc/ssh/$user
+    rm -f /etc/lunatic/limit/ssh/ip/${user}
+    rm -f /etc/lunatic/ssh/ip/${user}
+    rm -f /etc/detail/ssh/$user
+    rm -f /var/www/html/ssh-$user.txt
+    clear
+    echo ""
+    echo -e "\e[0;36mUser $user berhasil dihapus. \e[0m"
+else
+    echo -e "\e[31;1mFailure: User \e[32m $user \e[31;1m tidak ditemukan \e[0m"
+fi

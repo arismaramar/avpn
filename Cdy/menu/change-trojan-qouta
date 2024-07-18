@@ -1,0 +1,138 @@
+#!/bin/bash
+
+runn='\e[38;5;14m' 
+acc='\e[38;5;146m'
+LO='\e[38;5;162m' # PURPLE SANGAR
+UK='\e[38;5;99m'  # UNGU KOLOT
+BK='\e[38;5;196m' # BEREM KOLOT 
+R1='\e[38;5;155m' # HEJO SEMU BODAS
+R2='\e[38;5;49m'  # HEJO LIME / APEL
+BC='\e[38;5;195m' # BODAS CERAH PISAN
+HU='\e[38;5;115m' # HEJO SEMU ABU
+UB='\e[38;5;147m' # UNGU KABODASAN
+KT='\e[38;5;187m' # KONENG TARIGU
+Suffix='\e[0m'
+Xark="\e[0m"
+
+
+yellow="\033[1;33m"
+ungu="\033[0;35m"
+Red="\033[91;1m"
+Xark="\033[0m"
+BlueCyan="\033[5;36m"
+WhiteBe="\033[5;37m"
+GreenBe="\033[5;32m"
+YellowBe="\033[5;33m"
+BlueBe="\033[5;34m"
+Cyan="\e[96;1m"
+# . Liner 
+function baris_panjang() {
+  echo -e "${LO} ——————————————————————————————————— ${Xark} "
+}
+
+function Lunatic_Banner() {
+clear
+baris_panjang
+echo -e "${R1}          ANGGUNvpn TUNNELING     ${Xark} "
+baris_panjang
+}
+
+function Sc_Credit(){
+sleep 1
+baris_panjang
+echo -e "\033[0;36m    Terimakasih Telah Menggunakan \033[0m"
+echo -e "\033[0;36m            Script Credit \033[0m"
+echo -e "\033[0;36m          ANGGUNvpn Tunneling  \033[0m"
+baris_panjang
+exit 1
+}
+
+
+function change_vmess_quota() {
+users=$(grep -E "^#tro-user# " "/etc/xray/tro.json" | sed -E 's/^#tro-user# ([^ ]+).*/\1/' | awk '!seen[$0]++')
+
+Lunatic_Banner
+
+baris_panjang
+echo ""
+i=1
+for user in $users; do
+    echo -e " \e[92;1m$i) \e[0;36m$user \e[0m"
+    ((i++))
+done
+
+echo ""
+baris_panjang
+echo -e ""
+read -p " Just input Number: " number
+
+# Dapatkan username berdasarkan nomor yang dipilih
+user=$(echo "$users" | sed -n "${number}p")
+
+if [ -z "$user" ]; then
+    echo -e "\e[31;1m number is missing or incorrect\e[0m"
+    exit 1
+fi
+
+
+
+  quota_file="/etc/lunatic/limit/trojan/quota/${user}"
+
+  # Validasi apakah file kuota sudah ada
+  if [ -e "$quota_file" ]; then
+    current_quota=$(cat "$quota_file")
+    echo ""
+    baris_panjang
+    echo -e "${Cyan} BEFORE ${Xark} "
+    echo ""
+    echo -e "\e[0;36m Username    : $user ${Xark} "
+    echo -e "\e[0;36m Quota       : $((current_quota / 1024 / 1024 / 1024)) GB ${Xark}"
+    echo ""
+    baris_panjang
+echo ""
+echo ""
+read -p "Input New Quota  : " new_quota
+echo -e ""
+Loading_Animasi
+Loading_Succes
+
+    # Validasi jika masukan kosong atau tidak valid
+
+    if [[ -z "$new_quota" || ! "$new_quota" =~ ^[0-9]+$ ]]; then
+baris_panjang
+echo -e "${Red} Wrong Input Methode ${Xark} "
+baris_panjang
+    else
+
+      # Konversi kuota ke byte
+      new_quota_bytes=$((new_quota * 1024 * 1024 * 1024))
+      echo "${new_quota_bytes}" > "${quota_file}"
+
+clear
+baris_panjang
+echo -e "${GreenBe}Succesfully ${Xark} "
+echo -e ""
+echo -e "${Cyan} AFTER ${Xark} "
+echo -e ""
+echo -e "${R1} New Quota: $new_quota GB ${Xark} "
+echo -e "${R1} Username : $user ${Xark} "
+echo -e ""
+baris_panjang
+Sc_Credit
+
+      # Hapus entri lama dan tambahkan yang baru ke dalam database
+      DATADB=$(cat /etc/trojan/.trojan.db | grep "^#tro#" | grep -w "${user}" | awk '{print $2}')
+      if [[ "${DATADB}" != '' ]]; then
+        sed -i "/\b${user}\b/d" /etc/trojan/.trojan.db
+      fi
+      echo "#tro# ${user} ${exp} ${uuid} ${new_quota_bytes} ${iplimit}" >>/etc/trojan/.trojan.db
+
+      echo -e "${GreenBe}Database Update Succes. ${Xark} "
+    fi
+  else
+    echo -e "${Red}Quota is Wrong in ${Xark}${GreenBe}$user. ${Xark}"
+  fi
+}
+
+# Panggil fungsi untuk mengganti kuota VMess
+change_vmess_quota

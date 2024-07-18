@@ -1,0 +1,50 @@
+#!/bin/bash
+clear
+
+# Clear access log
+echo -n > /var/log/xray/accesstro.log
+
+# Ambil daftar pengguna dari direktori batasan IP
+data=($(ls /etc/lunatic/limit/trojan/ip))
+
+for user in "${data[@]}"
+do
+    # Ambil batasan IP dari file
+    iplimit=$(cat /etc/lunatic/limit/trojan/ip/$user)
+    
+    # Ambil daftar IP yang diakses oleh pengguna dari log akses
+    accessed_ips=$(cat /var/log/xray/accesstro.log | grep "$user" | cut -d " " -f 3 | sed 's/tcp://g' | cut -d ":" -f 1 | sort | uniq)
+    
+    # Hitung jumlah IP yang diakses
+    num_accessed_ips=$(echo "$accessed_ips" | wc -l)
+    
+    if [[ $num_accessed_ips -gt $iplimit ]]; then
+        # Kunci akun pengguna
+        sed -i "/#tro-user# $user /{n;s/^/#/}" /etc/xray/tro.json
+        systemctl stop trojs>> /dev/null 2>&1
+    fi
+    
+    sleep 0.1
+done
+
+# Atur lebar untuk setiap kolom
+username_width=12
+iplogin_width=12
+limit_ip_width=12
+lastlogin_width=12
+
+# // color
+PURPLES="\e[38;5;162m" # purple
+PURPLE="\e[38;5;162m"  # purple
+P="\e[38;5;162m"       # purple
+R1="\e[38;5;49m"       # lime
+R2="\e[38;5;155m"      # white Lime
+
+    clear
+    echo -e "$PURPLES┌━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┐\033[0m"
+    printf "${PURPLE}│${R1} %-${username_width}s ${P}│${R1} %-${iplogin_width}s ${P}│${R1} %-${limit_ip_width}s ${P}│${R1}\n" "USERNAME" "LIMIT IP" "LOGIN IP"
+    echo -e "$PURPLES└━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┘\033[0m "
+    echo -e "$PURPLES┌━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┐\033[0m"
+    printf "${PURPLE}│${R2} %-${username_width}s ${P}│${R2} %-${iplogin_width}s ${P}│${R2} %-${limit_ip_width}s ${P}│${R2}\n" "${user}" "${iplimit} IP" "$num_accessed_ips IP"
+    echo -e "$PURPLES└━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┘\033[0m "
+    echo ""

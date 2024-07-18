@@ -1,0 +1,76 @@
+#!/bin/bash
+clear
+# // color format 38
+CC='\e[38;5;14m'  # 
+LO='\e[38;5;162m' # PURPLE HACKER
+UK='\e[38;5;99m'  # UNGU KOLOT
+BK='\e[38;5;196m' # BEREM KOLOT 
+R1='\e[38;5;155m' # HEJO SEMU BODAS
+R2='\e[38;5;49m'  # HEJO LIME / APEL
+BC='\e[38;5;195m' # BODAS CERAH PISAN
+HU='\e[38;5;115m' # HEJO SEMU ABU
+UB='\e[38;5;147m' # UNGU KABODASAN
+KT='\e[38;5;187m' # KONENG TARIGU
+# // color fromat 5 
+BlueCyan='\e[5;36m'
+WhiteBe='\e[5;37m'
+GreenBe='\e[5;32m'
+Xark='\e[0m'
+
+
+
+function Banner_Libev() {
+clear
+  echo -e "${LO} ┌━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┐${Xark} "
+  echo -e "${R1}              BOT LIBEV              ${Xark} "
+  echo -e "${LO} └━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┘${Xark} "
+}
+
+
+
+function BR1() {
+  echo -e "${LO} ┌━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┐${Xark} "
+}
+
+function BR2() {
+  echo -e "${LO} └━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┘${Xark} "
+}
+
+
+function Menu_Features() {
+
+cybervpn_service=$(systemctl status cybervpn | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
+
+# STATUS SERVICE  SQUID 
+if [[ $cybervpn_service == "running" ]]; then 
+   status_cybervpn=" ${R1}[ ON ]${Xark}"
+else
+   status_cybervpn=" ${BK}[ OF ]${Xark}"
+fi
+
+
+  BR1
+  echo -e "${LO}  STATUS BOT : ${status_cybervpn}"
+  echo -e "${LO} "
+  echo -e "${LO} │\e[97;1m[01]• CREATE BOT TELEGRAM  "
+  echo -e "${LO} │\e[97;1m[02]• DELETE BOT TELEGRAM  "
+  echo -e "${LO} │\e[97;1m[03]• RESTAR BOT TELEGRAM  "
+  echo -e "${LO} │\e[97;1m[04]• CHANGE ID & KEY BOT  "
+  echo -e "${LO} │\e[91;1m[xx]• EXIT ${Xark}    "
+  BR2
+  echo -e ""
+}
+
+
+
+Banner_Libev
+Menu_Features
+read -p "  just Input 1-4 or xx :  "  opt
+echo -e   ""
+case $opt in
+01 | 1) clear ; wget https://raw.githubusercontent.com/arismaramar/avpn/main/Bot/bot.sh && chmod +x bot.sh && ./bot.sh ;;
+02 | 2) clear ; systemctl stop cybervpn && m-bot ;;
+03 | 3) clear ; systemctl restart cybervpn && m-bot ;;
+04 | 4) clear ; nano /root/cybervpn/var.txt ;;
+*) clear ; menu ;;
+esac

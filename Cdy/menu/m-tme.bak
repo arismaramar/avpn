@@ -1,0 +1,164 @@
+#!/bin/bash
+clear
+# // color format 38
+CC='\e[38;5;14m'  # 
+LO='\e[38;5;162m' # PURPLE HACKER
+UK='\e[38;5;99m'  # UNGU KOLOT
+BK='\e[38;5;196m' # BEREM KOLOT 
+R1='\e[38;5;155m' # HEJO SEMU BODAS
+R2='\e[38;5;49m'  # HEJO LIME / APEL
+BC='\e[38;5;195m' # BODAS CERAH PISAN
+HU='\e[38;5;115m' # HEJO SEMU ABU
+UB='\e[38;5;147m' # UNGU KABODASAN
+KT='\e[38;5;187m' # KONENG TARIGU
+# // color fromat 5 
+BlueCyan='\e[5;36m'
+WhiteBe='\e[5;37m'
+GreenBe='\e[5;32m'
+Xark='\e[0m'
+
+
+
+function Account_Banner() {
+clear
+  echo -e "${LO} ┌━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┐${Xark} "
+  echo -e "${R1}             THEME MENU                 ${Xark} "
+  echo -e "${LO} └━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┘${Xark} "
+}
+
+
+
+function BR1() {
+  echo -e "${LO} ┌━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┐${Xark} "
+}
+
+function BR2() {
+  echo -e "${LO} └━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┘${Xark} "
+}
+
+
+Account_Banner
+  BR1
+  echo -e "\e[38;5;49m │\e[97;1m[1]. Fighter Tunnel"
+  echo -e "\e[38;5;49m │\e[97;1m[2]. Lunatic Tunnel"
+  echo -e "\e[38;5;49m │\e[97;1m[3]. Default"
+  echo -e "\e[38;5;49m │\e[91;1m[4]. Lunatix MOD \e[0m"
+  echo -e "\e[38;5;49m │\e[91;1m[5]. EXIT\e[0m"  
+  BR2
+  BR1
+  echo -e ""
+  echo -e "\e[38;5;49m │\e[91;1m[5]. Dark x Purple   \e[93;1m( coomingsoon ) \e[0m"
+  echo -e "\e[38;5;49m │\e[91;1m[6]. Cyan x Blue     \e[93;1m( coomingsoon ) \e[0m"
+  echo -e "\e[38;5;49m │\e[91;1m[7]. Anonymous Light \e[93;1m( coomingsoon ) \e[0m"
+  echo -e "\e[38;5;49m │\e[91;1m[8]. Custom Menu     \e[93;1m( coomingsoon ) \e[0m"
+  BR2
+  echo -e ""
+read -p " Just Input Number :" bro
+
+
+if [ $bro = 1 ] || [ $bro = 1 ]
+then
+
+# // Hapus File Lama
+rm -rf /usr/local/sbin/menu
+rm -rf /usr/local/sbin/m-ftr
+rm -rf /usr/local/sbin/welcome
+rm -rf /usr/local/sbin/FT
+
+# // Download File Baru
+wget -q -O /usr/local/sbin/menu "https://raw.githubusercontent.com/lunatixmyscript/lunatixvpn/main/Tme/FT" && chmod 777 /usr/local/sbin/menu
+menu
+fi
+if [ $bro = 2 ] || [ $bro = 2 ]
+then
+
+# // Hapus File Lama
+rm -rf /usr/local/sbin/menu
+rm -rf /usr/local/sbin/m-ftr
+rm -rf /usr/local/sbin/welcome
+rm -rf /usr/local/sbin/LTX
+rm -rf /usr/local/sbin/WELTX
+rm -rf /usr/local/sbin/FEATUR
+
+# // Download File Baru
+wget -q -O /usr/local/sbin/menu "https://raw.githubusercontent.com/lunatixmyscript/lunatixvpn/main/Tme/LTX" && chmod 777 /usr/local/sbin/menu
+wget -q -O /usr/local/sbin/welcome "https://raw.githubusercontent.com/lunatixmyscript/lunatixvpn/main/Tme/WELTX" && chmod 777 /usr/local/sbin/welcome
+wget -q -O /usr/local/sbin/m-ftr "https://raw.githubusercontent.com/lunatixmyscript/lunatixvpn/main/Tme/FEATUR" && chmod 777 /usr/local/sbin/m-ftr
+welcome
+fi
+if [ $bro = 3 ] || [ $bro = 3 ]
+then
+
+# // hapus File lama
+rm -rf /usr/local/sbin/menu
+rm -rf /usr/local/sbin/welcome
+rm -rf /usr/local/sbin/m-ftr
+rm -rf /usr/local/sbin/menu-default
+rm -rf /usr/local/sbin/wel-default
+rm -rf /usr/local/sbin/ftr-default
+rm -rf /usr/local/sbin/wel-mod
+rm -rf /usr/local/sbin/menu-mod
+rm -rf /usr/local/sbin/ftr-mod
+rm -rf /usr/local/sbin/mssh-mod
+rm -rf /usr/local/sbin/mbkp-mod
+rm -rf /usr/local/sbin/mvle-mod
+rm -rf /usr/local/sbin/mvme-mod
+rm -rf /usr/local/sbin/mbot-mod
+rm -rf /usr/local/sbin/mftr-mod
+rm -rf /usr/local/sbin/mssr-mod
+
+# // Download File Baru / default
+wget -q -O /usr/local/sbin/menu "https://raw.githubusercontent.com/lunatixmyscript/lunatixvpn/main/Tme/menu-default" && chmod 777 /usr/local/sbin/menu
+wget -q -O /usr/local/sbin/menu "https://raw.githubusercontent.com/lunatixmyscript/lunatixvpn/main/Tme/wel-default" && chmod 777 /usr/local/sbin/welcome
+wget -q -O /usr/local/sbin/welcome "https://raw.githubusercontent.com/lunatixmyscript/lunatixvpn/main/Tme/ftr-default" && chmod 777 /usr/local/sbin/m-ftr
+welcome
+fi
+if [ $bro = 4 ] || [ $bro = 4 ]
+then
+# // Hapus File Lama
+rm -rf /usr/local/sbin/wel-mod
+rm -rf /usr/local/sbin/menu-mod
+rm -rf /usr/local/sbin/ftr-mod
+rm -rf /usr/local/sbin/menu
+rm -rf /usr/local/sbin/m-ftr
+rm -rf /usr/local/sbin/welcome
+rm -rf /usr/local/sbin/LTX
+rm -rf /usr/local/sbin/WELTX
+rm -rf /usr/local/sbin/FEATUR
+rm -rf /usr/local/sbin/m-ssh
+rm -rf /usr/local/sbin/m-bkp
+rm -rf /usr/local/sbin/m-vle
+rm -rf /usr/local/sbin/m-vme
+rm -rf /usr/local/sbin/m-ssr
+rm -rf /usr/local/sbin/m-nob
+rm -rf /usr/local/sbin/m-ftr
+rm -rf /usr/local/sbin/m-xry
+rm -rf /usr/local/sbin/mssh-mod
+rm -rf /usr/local/sbin/mbkp-mod
+rm -rf /usr/local/sbin/mvle-mod
+rm -rf /usr/local/sbin/mvme-mod
+rm -rf /usr/local/sbin/mbot-mod
+rm -rf /usr/local/sbin/mftr-mod
+rm -rf /usr/local/sbin/mssr-mod
+rm -rf /usr/local/sbin/mxry-mod
+
+
+# // Download File Baru
+wget -q -O /usr/local/sbin/menu "https://raw.githubusercontent.com/lunatixmyscript/lunatixvpn/main/Tme/menu-mod" && chmod 777 /usr/local/sbin/menu
+wget -q -O /usr/local/sbin/welcome "https://raw.githubusercontent.com/lunatixmyscript/lunatixvpn/main/Tme/wel-mod" && chmod 777 /usr/local/sbin/welcome
+wget -q -O /usr/local/sbin/m-ftr "https://raw.githubusercontent.com/lunatixmyscript/lunatixvpn/main/Tme/mftr-mod" && chmod 777 /usr/local/sbin/m-ftr
+wget -q -O /usr/local/sbin/m-ssh "https://raw.githubusercontent.com/lunatixmyscript/lunatixvpn/main/Tme/mssh-mod" && chmod 777 /usr/local/sbin/m-ssh
+wget -q -O /usr/local/sbin/m-vle "https://raw.githubusercontent.com/lunatixmyscript/lunatixvpn/main/Tme/mvle-mod" && chmod 777 /usr/local/sbin/m-vle
+wget -q -O /usr/local/sbin/m-vme "https://raw.githubusercontent.com/lunatixmyscript/lunatixvpn/main/Tme/mvme-mod" && chmod 777 /usr/local/sbin/m-vme
+wget -q -O /usr/local/sbin/m-ssr "https://raw.githubusercontent.com/lunatixmyscript/lunatixvpn/main/Tme/mssr-mod" && chmod 777 /usr/local/sbin/m-ssr
+wget -q -O /usr/local/sbin/m-nob "https://raw.githubusercontent.com/lunatixmyscript/lunatixvpn/main/Tme/mnob-mod" && chmod 777 /usr/local/sbin/m-nob
+wget -q -O /usr/local/sbin/m-bkp "https://raw.githubusercontent.com/lunatixmyscript/lunatixvpn/main/Tme/mbkp-mod" && chmod 777 /usr/local/sbin/m-bkp
+wget -q -O /usr/local/sbin/m-bot "https://raw.githubusercontent.com/lunatixmyscript/lunatixvpn/main/Tme/mbot-mod" && chmod 777 /usr/local/sbin/m-bot
+
+welcome
+fi
+if [ $bro = 5 ] || [ $bro = 5 ]
+then
+
+
+fi

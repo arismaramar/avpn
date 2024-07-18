@@ -1,0 +1,73 @@
+#!/bin/bash
+DF='\e[39m'
+Bold='\e[1m'
+Blink='\e[5m'
+yell='\e[33m'
+red='\e[31m'
+green='\e[32m'
+blue='\e[34m'
+PURPLE='\e[35m'
+cyan='\e[36m'
+Lred='\e[91m'
+Lgreen='\e[92m'
+yellow='\e[93m'
+NC='\e[0m'
+GREEN='\033[0;32m'
+ORANGE='\033[0;33m'
+LIGHT='\033[0;37m'
+grenbo="\e[92;1m"
+purple() { echo -e "\\033[35;1m${*}\\033[0m"; }
+tyblue() { echo -e "\\033[36;1m${*}\\033[0m"; }
+yellow() { echo -e "\\033[33;1m${*}\\033[0m"; }
+green() { echo -e "\\033[32;1m${*}\\033[0m"; }
+red() { echo -e "\\033[31;1m${*}\\033[0m"; }
+
+# jalankan loading : sleep 0.8 & loading $!
+loading() {
+  local pid=$1
+  local delay=0.1
+  local spin='-\|/'
+
+  while ps -p $pid > /dev/null; do
+    local temp=${spin#?}
+    printf "[%c] " "$spin"
+    local spin=$temp${spin%"$temp"}
+    sleep $delay
+    printf "\b\b\b\b\b\b"
+  done
+
+  printf "    \b\b\b\b"
+}
+
+
+apt install haproxy -y
+REPO="https://raw.githubusercontent.com/arismaramar/ex-fodder/main/"
+# fixhap fix Haproxy
+clear
+echo -e "\e[0;35m -----------------------------  ${Xark} "
+echo -e "${ungu}               FIXHAP            ${Xark} "
+echo -e "\e[0;35m -----------------------------  ${Xark} "
+echo -e ""
+read -p " Input Your Domain : " -e domain
+
+sleep 0.8 & loading $!
+
+rm -fr /etc/xray/domain
+echo "${domain}" > /etc/xray/domain
+echo "${domain}" > /root/domain
+systemctl stop haproxy
+systemctl stop nginx
+wget -O /etc/haproxy/haproxy.cfg "${REPO}haproxy.cfg" >/dev/null 2>&1
+wget -O /etc/nginx/conf.d/xray.conf "${REPO}xray.conf" >/dev/null 2>&1
+sed -i "s/xxx/${domain}/g" /etc/haproxy/haproxy.cfg
+sed -i "s/xxx/${domain}/g" /etc/nginx/conf.d/xray.conf
+curl ${REPO}nginx.conf > /etc/nginx/nginx.conf
+
+cat /etc/xray/xray.crt /etc/xray/xray.key | tee /etc/haproxy/hap.pem
+
+systemctl restart nginx
+systemctl restart haproxy
+systemctl restart xray
+sleep 2
+
+menu

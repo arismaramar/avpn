@@ -1,0 +1,95 @@
+#!/bin/bash
+clear
+
+######################################
+MYIP=$(curl -sS ipv4.icanhazip.com)
+######################################
+clear
+######################################
+# // USERNAME IZIN IPP
+rm -f /usr/bin/user
+username=$(curl -sS https://raw.githubusercontent.com/arismaramar/izin/main/ip | grep $MYIP | awk '{print $2}')
+echo "$username" >/usr/bin/user
+rm -f /usr/bin/e
+valid=$(curl -sS https://raw.githubusercontent.com/arismaramar/izin/main/ip | grep $MYIP | awk '{print $3}')
+echo "$valid" > /usr/bin/e
+
+clear
+######################################
+# // DETAIL ORDER IZIN IP
+#username=$(cat /usr/bin/user)
+oid=$(cat /usr/bin/ver)
+exp=$(cat /usr/bin/e)
+######################################
+clear
+# // DAYS LEFT
+d1=$(date -d "$valid" +%s)
+d2=$(date -d "$today" +%s)
+#certifacate=$(((d1 - d2) / 86400))
+clear
+######################################
+
+
+ns=$(cat /root/nsdomain)
+clear
+
+# // color validity
+# // color format 38
+runn='\e[38;5;14m' 
+acc='\e[38;5;146m'
+LO='\e[38;5;162m'
+UK='\e[38;5;99m'  # UNGU KOLOT
+BK='${CN}' # BEREM KOLOT 
+R1='\e[38;5;155m' # HEJO SEMU BODAS
+R2='\e[38;5;49m'  # HEJO LIME / APEL
+BC='\e[38;5;195m' # BODAS CERAH PISAN
+HU='\e[38;5;115m' # HEJO SEMU ABU
+UB='\e[38;5;147m' # UNGU KABODASAN
+KT='\e[38;5;187m' # KONENG TARIGU
+Suffix='\e[0m'
+#$(curl -s ipv4.icanhazip.com)
+Os=$( cat /etc/os-release | grep -w PRETTY_NAME | head -n1 | sed 's/PRETTY_NAME//g' | sed 's/=//g' | sed 's/"//g' )
+ArCh=$( uname -m )
+BC="\e[5;36m"
+Xark="\e[0m"
+PP="\e[0;35m"
+CN="\e[0;36m"
+OG="\e[0;33m"
+function LTX() {
+echo -e "${BC} ————————————————————————————————————————${Xark}"
+}
+
+
+function Lunatix_Banner() {
+echo -e "${BC} ————————————————————————————————————————${Xark}"
+echo -e " ${BC}|${PP}          ANGGUNvpn Tunneling ${Xark}          ${BC}|${Xark}"
+echo -e "${BC} ————————————————————————————————————————${Xark}"
+}
+
+
+
+function Service_System_Operating() {
+echo -e "${OG}  OS        :$( cat /etc/os-release | grep -w PRETTY_NAME | head -n1 | sed 's/PRETTY_NAME//g' | sed 's/=//g' | sed 's/"//g' )   \033[0m "
+echo -e "${OG}  RAM       :$(free -m | awk 'NR==2 {print $2}') MB   \033[0m "
+echo -e "${OG}  Arch      :${ArCh}     \033[0m "
+echo -e "${OG}  CITY      :$(cat /etc/xray/city)    \033[0m "
+echo -e "${OG}  DOMAIN    :$(cat /etc/xray/domain)    \033[0m "
+echo -e "${OG}  NS DOMAIN :$(cat /root/nsdomain)    \033[0m "
+}
+
+function LtX_Inf() {
+LTX
+echo -e " ${BC}|${UB} Telegram  : @amantubilah             ${BC}|\e[0m"
+echo -e " ${BC}|${UB} Whatsapp  : +6285365581599           ${BC}|\e[0m"
+echo -e " ${BC}|${UB} Facebook  : Dean                     ${BC}|\e[0m"
+echo -e " ${BC}|${UB} Channel   : @anggun_net              ${BC}|\e[0m"
+LTX
+echo -e "  ${BC}|\e[97m    Run Type Acces \033[92;1mmenu\033[0m\e[97m Command     ${BC}|\e[0m "
+LTX
+echo ""
+}
+
+
+Lunatix_Banner
+Service_System_Operating
+LtX_Inf

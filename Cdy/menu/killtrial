@@ -1,0 +1,71 @@
+#tro-user#/bin/bash
+
+user="$2"
+function ssh(){
+	getent passwd ${user}  >/dev/null 2>&1
+	userdel -f ${user}  >/dev/null 2>&1
+	systemctl restart sshd >/dev/null 2>&1
+	systemctl restart ws >/dev/null 2>&1
+	rm -f /etc/lunatic/limit/ssh/ip/$user
+	sed -i "/#ssh# $user $exp/,/^},{/d" /etc/ssh/.ssh.db
+	rm -f /etc/limit/ssh/$user
+	rm -f /var/www/html/ssh-$user.txt
+}
+function vmess(){
+    exp=$(grep -wE "^#vme-user# $user" "/etc/xray/vme.json" | cut -d ' ' -f 3 | sort | uniq)
+	sed -i "/^#vme-user# $user $exp/,/^},{/d" /etc/xray/vme.json
+    sed -i "/^#vme# $user $exp/d" /etc/vmess/.vmess.db
+	sed -i "/^#vme-user# $user $exp/,/^},{/d" /etc/xray/vme.json
+	rm -f /etc/lunatic/limit/vmess/ip/$user
+	rm -f /etc/limit/vmess/$user
+	rm -f /var/www/html/vmess-$user.txt
+	rm -f /detail/vme/$user.txt
+	systemctl restart xray
+          syatemctl restart vmejs
+}
+function vless(){
+    exp=$(grep -wE "^#vle-user# $user" "/etc/xray/vle.json" | cut -d ' ' -f 3 | sort | uniq)
+	sed -i "/^#vle-user# $user $exp/,/^},{/d" /etc/xray/vle.json
+    sed -i "/^#vle# $user $exp/d" /etc/vless/.vless.db
+	sed -i "/^#vle-user# $user $exp/,/^},{/d" /etc/xray/vle.json
+	rm -f /etc/lunatic/limit/vless/ip/$user
+	rm -f /etc/limit/vless/$user
+	rm -f /var/www/html/vless-$user.txt
+	rm -f /detail/vle/$user.txt
+	systemctl restart xray
+          syatemctl restart vlejs
+}
+function trojan(){
+    exp=$(grep -wE "^#tro-user# $user" "/etc/xray/tro.json" | cut -d ' ' -f 3 | sort | uniq)
+	sed -i "/^#tro-user# $user $exp/,/^},{/d" /etc/xray/tro.json
+    sed -i "/^#tro# $user $exp/d" /etc/trojan/.trojan.db
+	sed -i "/^#tro-user# $user $exp/,/^},{/d" /etc/xray/tro.json
+	rm -f /etc/lunatic/limit/trojan/ip/$user
+	rm -f /etc/limit/trojan/$user
+	rm -f /var/www/html/trojan-$user.txt
+	rm -f /detail/tro/$user.txt
+	systemctl restart xray
+          syatemctl restart trojs
+}
+function shadowsocks(){
+    exp=$(grep -wE "^#tro-user# $user" "/etc/xray/ssr.json" | cut -d ' ' -f 3 | sort | uniq)
+	sed -i "/^#tro-user# $user $exp/,/^},{/d" /etc/xray/ssr.json
+    sed -i "/^#ssr# $user $exp/d" /etc/shadowsocks/.shadowsocks.db
+	sed -i "/^#ssr-user# $user $exp/,/^},{/d" /etc/xray/ssr.json
+	rm -f /etc/limit/shadowsocks/$user
+	rm -f /var/www/html/shadowsocks-$user.txt
+	rm -f /detail/ssr/$user.txt
+	systemctl restart xray
+          syatemctl restart ssrjs
+}
+if [[ ${1} == "vmess" ]]; then
+vmess
+elif [[ ${1} == "vless" ]]; then
+vless
+elif [[ ${1} == "trojan" ]]; then
+trojan
+elif [[ ${1} == "shadowsocks" ]]; then
+shadowsocks
+elif [[ ${1} == "ssh" ]]; then
+ssh
+fi

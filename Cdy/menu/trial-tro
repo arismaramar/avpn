@@ -1,0 +1,363 @@
+#!/bin/bash
+clear
+
+function checking_sc() {
+    MYIP=$(curl -sS ipv4.icanhazip.com)
+    IZIN=$(curl -sS https://raw.githubusercontent.com/arismaramar/izin/main/ip | awk '{print $4}')
+
+    if echo "$IZIN" | grep -wq "$MYIP"; then
+        echo "IZIN DITERIMA ANJING"
+    else
+        echo -e "\e[38;5;162m────────────────────────────────────────────\033[0m"
+        echo -e "\033[44m          404 NOT FOUND AUTOSCRIPT          \033[0m"
+        echo -e "\e[38;5;162m────────────────────────────────────────────\033[0m"
+        echo -e ""
+        echo -e "           \e[38;5;196mPERMISSION DENIED !\033[0m"
+        echo -e "  \033[0;36mYour VPS IP $MYIP has been banned.\033[0m"
+        echo -e "    \033[0;36mBuy access permissions for scripts.\033[0m"
+        echo -e "            \033[0;36mContact Admin :\033[0m"
+        echo -e "\e[38;5;162m────────────────────────────────────────────\033[0m"
+        exit 1  # Exit with non-zero status to indicate failure
+    fi
+}
+
+checking_sc
+clear
+
+
+
+
+domain=$(cat /etc/xray/domain)
+user=LT.TRO-`</dev/urandom tr -dc 0-9 | head -c3`
+Quota=1
+iplimit=1
+
+#limitip
+if [[ $iplimit -gt 0 ]]; then
+mkdir -p /etc/lunatic/limit/trojan/ip/
+echo -e "$iplimit" > /etc/lunatic/limit/trojan/ip/$user
+else
+echo > /dev/null
+fi
+
+
+
+
+clear
+uuid=$(cat /proc/sys/kernel/random/uuid)
+exp=$(date -d "$minutes days" +"%Y-%m-%d")
+tgl=$(date -d "$minutes days" +"%d")
+bln=$(date -d "$minutes days" +"%b")
+thn=$(date -d "$minutes days" +"%Y")
+expe="$tgl $bln, $thn"
+tgl2=$(date +"%d")
+bln2=$(date +"%b")
+thn2=$(date +"%Y")
+tnggl="$tgl2 $bln2, $thn2"
+
+
+# Link Trojan Akun
+systemctl restart trojs
+GRPC="trojan://${uuid}@${domain}:443?mode=gun&security=tls&type=grpc&serviceName=trojan-grpc&sni=bug.com#${user}"
+TLS="trojan://${uuid}@bugkamu.com:443?path=%2Ftrojan-ws&security=tls&host=${domain}&type=ws&sni=${domain}#${user}"
+WS="trojan://${uuid}@${domain}:80?path=%2Ftrojan-ws&security=none&host=${domain}&type=ws#${user}"
+
+
+
+
+#. LINER
+
+function lunatix_liner() {
+  echo -e "\e[38;5;162m ———————————————————————————————————————\033[0m"
+}
+
+
+#. TEXT
+
+function Sc_Credit(){
+sleep 1
+lunatix_liner
+echo -e "\033[0;36m      Terimakasih Telah Menggunakan \033[0m"
+echo -e "\033[0;36m             Script Credit \033[0m"
+echo -e "\033[0;36m           ANGGUNvpn Tunneling  \033[0m"
+lunatix_liner
+exit 1
+}
+
+
+#. LOADING
+# // jalankan perintah sleep 3 & loading $!
+loading() {
+  local pid=$1
+  local delay=0.1
+  local spin='-\|/'
+
+  while ps -p $pid > /dev/null; do
+    local temp=${spin#?}
+    printf "[%c] " "$spin"
+    local spin=$temp${spin%"$temp"}
+    sleep $delay
+    printf "\b\b\b\b\b\b"
+  done
+
+  printf "    \b\b\b\b"
+}
+
+
+function Lunatic_Banner() {
+clear
+lunatix_liner
+echo -e "\033[92;1m           ANGGUNvpn TUNNELING       \033[0m"
+lunatix_liner
+}
+
+
+
+
+
+
+
+
+
+
+
+Lunatic_Banner
+echo ""
+read -p " input Minutes : " anjing
+
+
+
+
+
+
+sed -i '/#LUNATIX-TROJAN#$/a\#tro-user# '"$user $anjing"'\
+},{"password": "'""$uuid""'","email": "'""$user""'"' /etc/xray/tro.json
+sed -i '/#LUNATIX-GRPC#$/a\#tro-user# '"$user $anjing"'\
+},{"password": "'""$uuid""'","email": "'""$user""'"' /etc/xray/tro.json
+
+
+
+
+
+clear
+
+
+cat >/var/www/html/trojan-$user.txt <<-END
+
+# Format Trojan GO/WS
+
+- name: Trojan-$user-GO/WS
+  server: ${domain}
+  port: 443
+  type: trojan
+  password: ${uuid}
+  network: ws
+  sni: ${domain}
+  skip-cert-verify: true
+  udp: true
+  ws-opts:
+    path: /trojan-ws
+    headers:
+        Host: ${domain}
+
+# Format Trojan gRPC
+
+- name: Trojan-$user-gRPC
+  type: trojan
+  server: ${domain}
+  port: 443
+  password: ${uuid}
+  udp: true
+  sni: ${domain}
+  skip-cert-verify: true
+  network: grpc
+  grpc-opts:
+    grpc-service-name: trojan-grpc
+
+---------------------------------------------------
+Link Akun Trojan 
+---------------------------------------------------
+Link WS          : 
+${trojanlink}
+---------------------------------------------------
+Link GRPC        : 
+${trojanlink1}
+---------------------------------------------------
+
+END
+
+service cron restart
+trojanlink="trojan://${uuid}@${domain}:443?path=%2Ftrojan-ws&security=tls&host=${domain}&type=ws&sni=${domain}#${user}"
+trojanlink1="trojan://${uuid}@${domain}:443?mode=gun&security=tls&type=grpc&serviceName=trojan-grpc&sni=${domain}#${user}"
+if [ ! -e /etc/trojan ]; then
+  mkdir -p /etc/trojan
+fi
+
+
+
+
+
+#if [ -z ${Quota} ]; then
+#  Quota="0"
+#fi
+
+#c=$(echo "${Quota}" | sed 's/[^0-9]*//g')
+#d=$((${c} * 1024 * 1024 * 1024))
+
+#if [[ ${c} != "0" ]]; then
+#  echo "${d}" >/etc/lunatic/limit/trojan/quota/${user}
+#fi
+
+
+
+# Menghapus karakter non-digit dari input
+c=$(echo "${Quota}" | sed 's/[^0-9]*//g')
+
+if [[ -z "${c}" ]]; then
+  echo "Input tidak valid atau kosong. Mengatur kuota ke 0."
+  c=0
+fi
+
+# Konversi dari GB ke byte
+d=$(( c * 1024 * 1024 * 1024 ))
+
+# Menyimpan nilai kuota jika tidak nol
+if [[ "${c}" -ne 0 ]]; then
+  echo "${d}" > /etc/lunatic/limit/trojan/quota/${user}
+  echo "Kuota telah diatur menjadi ${Quota} GB (${d} byte)."
+else
+  echo "Kuota tidak diatur karena nilai tidak valid."
+fi
+
+
+
+
+
+DATADB=$(cat /etc/trojan/.trojan.db | grep "^#tro#" | grep -w "${user}" | awk '{print $2}')
+if [[ "${DATADB}" != '' ]]; then
+  sed -i "/\b${user}\b/d" /etc/trojan/.trojan.db
+fi
+echo "#tro# ${user} ${exp} ${uuid} ${Quota} ${iplimit}" >>/etc/trojan/.trojan.db
+
+
+
+
+
+
+#.          DETAIL AKUN USER
+#################################################
+# // Menyimpan Account Hasil Create
+mkdir -p /detail/tro/
+cat > /detail/tro/$user.txt <<-END
+———————————————————————————————————————
+         ANGGUNvpn x Tunneling
+——————————————————————————————————————— 
+           Trojan Account
+———————————————————————————————————————
+Username         : $user
+Quota            : $Quota Gb
+Limit ip         : $iplimit Devic
+Expiry in        : $exp Day
+———————————————————————————————————————
+Port No Grpc     : 80-2082-8880
+Port Grpc/Tls    : 443-8443-2095
+Network          : ws/grpc
+Cipers           : aes-128-gcm
+patch            : ws/grpc/Wildcard
+Uuid Sadowsok    : ${uuid}
+———————————————————————————————————————
+Link Grpc        : ${trojanlink1}
+———————————————————————————————————————
+Link no Grpc     : ${trojanlink}
+———————————————————————————————————————
+Link Ws          : ${trojanlink2}
+———————————————————————————————————————
+Opem Clash       : https://${domain}:81/trojan-$user.txt
+———————————————————————————————————————
+END
+
+
+
+Send_Notif() {
+# // Get Bot
+KEY_TELE=$(sed -n '1p' /root/.notifbot | awk '{print $1}')
+URL="https://api.telegram.org/bot$KEY_TELE/sendMessage"
+ID_TELE=$(sed -n '2p' /root/.notifbot | awk '{print $1}')
+TIMES="10"
+
+TEXT="
+<code>—————————————————————————————————————</code>
+<code>   🟢Trojan successfully created🟢    </code>
+<code>—————————————————————————————————————</code>
+<code> USERNAME : $user        </code>
+<code> LIMIT IP : $iplimit ip  </code>
+<code> QUOTA    : $Quota Gb    </code>
+<code> ISP VPS  : $ISP         </code>
+<code>—————————————————————————————————————</code>
+<code> EXPIRED  : $anjing min  </code>
+<code>—————————————————————————————————————</code>
+<code> DOMAIN   : $domain      </code>
+<code>—————————————————————————————————————</code>
+<code>      Script Lunatic Tunneling       </code>
+<code>        Thanks Have ordered          </code>
+<code>—————————————————————————————————————</code>
+"
+#.  MEMBERI NOTIF KE TELE SETELAH AKUN DI BUAT
+#################################################
+curl -s --max-time $TIMES -d "chat_id=${ID_TELE}&disable_web_page_preview=1&text=$TEXT&parse_mode=html" $URL
+#################################################
+
+}
+
+Send_Notif
+
+
+
+
+
+
+
+yellow="\e[0;33m"
+Xark="\e[0m"
+
+
+
+function Details_Account() {
+echo -e "${WhiteBe} "
+lunatix_liner
+echo -e " TRIAL TROJAN "
+echo -e ""
+echo -e " Remarks      : ${user}" 
+echo -e " Host/IP      : ${domain}"
+echo -e " User Quota   : ${Quota} GB"
+echo -e " User IP      : ${iplimit} IP"
+echo -e " ISP          : $ISP"
+echo -e " Port TLS     : 443" 
+echo -e " port  WS     : 80,8880,8080"
+echo -e " Key          : ${uuid}" 
+echo -e " Path         : /trojan-ws" 
+echo -e " ServiceName  : trojan-grpc"
+}
+
+function Link_Json() {
+lunatix_liner 
+echo -e " Link TLS     : ${TLS}" 
+lunatix_liner 
+echo -e " Link WS      : ${WS}" 
+lunatix_liner 
+echo -e " Link GRPC    : ${GRPC}" 
+lunatix_liner 
+echo -e " OpenClash    : https://${domain}:81/trojan-$user.txt" 
+lunatix_liner
+}
+
+function Details_Expiry() {
+echo -e "${yellow} Expiry       : $anjing minutes ${Xark} "
+echo "userdel -f \"$user\"" | at now + $anjing minutes &> /dev/null
+
+}
+Lunatic_Banner
+Details_Account
+Link_Json
+Details_Expiry
+Sc_Credit

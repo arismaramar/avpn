@@ -1,0 +1,154 @@
+#!/bin/bash
+clear
+
+function checking_sc() {
+    MYIP=$(curl -sS ipv4.icanhazip.com)
+    IZIN=$(curl -sS https://raw.githubusercontent.com/arismaramar/izin/main/ip | awk '{print $4}')
+
+    if echo "$IZIN" | grep -wq "$MYIP"; then
+        echo "IZIN DITERIMA ANJING"
+    else
+        echo -e "\e[38;5;162m────────────────────────────────────────────\033[0m"
+        echo -e "\033[44m          404 NOT FOUND AUTOSCRIPT          \033[0m"
+        echo -e "\e[38;5;162m────────────────────────────────────────────\033[0m"
+        echo -e ""
+        echo -e "           \e[38;5;196mPERMISSION DENIED !\033[0m"
+        echo -e "  \033[0;36mYour VPS IP $MYIP has been banned.\033[0m"
+        echo -e "    \033[0;36mBuy access permissions for scripts.\033[0m"
+        echo -e "            \033[0;36mContact Admin :\033[0m"
+        echo -e "\e[38;5;162m────────────────────────────────────────────\033[0m"
+        exit 1  # Exit with non-zero status to indicate failure
+    fi
+}
+
+checking_sc
+clear
+
+
+yellow="\033[0;33m"
+ungu="\033[0;35m"
+Red="\033[91;1m"
+Xark="\033[0m"
+BlueCyan="\033[5;36m"
+WhiteBe="\033[5;37m"
+GreenBe="\033[5;32m"
+YellowBe="\033[5;33m"
+BlueBe="\033[5;34m"
+
+
+#. LINER
+
+function lunatix_liner() {
+  echo -e "\e[38;5;162m ———————————————————————————————————————\033[0m"
+}
+
+
+#. TEXT
+
+function Sc_Credit(){
+sleep 1
+lunatix_liner
+echo -e "\033[0;36m      Terimakasih Telah Menggunakan \033[0m"
+echo -e "\033[0;36m             Script Credit \033[0m"
+echo -e "\033[0;36m           ANGGUNvpn Tunneling  \033[0m"
+lunatix_liner
+exit 1
+}
+
+
+#. LOADING
+# // jalankan perintah sleep 3 & loading $!
+loading() {
+  local pid=$1
+  local delay=0.1
+  local spin='-\|/'
+
+  while ps -p $pid > /dev/null; do
+    local temp=${spin#?}
+    printf "[%c] " "$spin"
+    local spin=$temp${spin%"$temp"}
+    sleep $delay
+    printf "\b\b\b\b\b\b"
+  done
+
+  printf "    \b\b\b\b"
+}
+
+
+function Lunatic_Banner() {
+clear
+lunatix_liner
+echo -e "\033[92;1m           ANGGUNvpn TUNNELING       \033[0m"
+lunatix_liner
+}
+
+
+# Baca nama pengguna dari vle.json, pisahkan username dan tanggal expired, lalu hilangkan duplikat
+users=$(grep -E "^#vle-user# " "/etc/xray/vle.json" | sed -E 's/^#vle-user# ([^ ]+).*/\1/' | awk '!seen[$0]++')
+
+
+# Tampilkan nama pengguna dengan nomor urut
+############################################
+echo ""
+lunatix_liner
+echo ""
+i=1
+for user in $users; do
+    echo "$i) $user"
+    ((i++))
+done
+echo ""
+lunatix_liner
+echo ""
+############################################
+read -p " Just input Number: " number
+
+# Dapatkan username berdasarkan nomor yang dipilih
+selected_user=$(echo "$users" | sed -n "${number}p")
+
+if [ -z "$selected_user" ]; then
+    echo -e "\e[31;1m number is missing or incorrect\e[0m"
+    exit 1
+fi
+
+
+
+
+limit_file="/etc/lunatic/limit/vless/ip/${user}"
+# Validasi apakah file batasan IP sudah ada
+if [ -e "$limit_file" ]; then
+  current_iplimit=$(cat "$limit_file")
+  echo "Limit ip is User $selected_user: $current_iplimit"
+lunatix_liner
+echo ""
+read -p "Input New ip    : " new_iplimit
+lunatix_liner
+echo -e ""
+
+# // Loading
+sleep 0.8 & loading $!
+
+  # Validasi jika masukan kosong
+  if [ -z "$new_iplimit" ]; then
+Lunatic_Banner
+lunatix_liner
+    echo -e "${Red} GAGAL !! ${Xark} "
+lunatix_liner
+Sc_Credit
+  else
+    echo "$new_iplimit" > "$limit_file"
+    
+    Lunatic_Banner
+    lunatix_liner
+    echo -e "${GreenBe} Succesfully ${Xark} "
+    echo ""
+    echo ""
+    echo -e "${yellow} New Ip    : $new_iplimit GB ${Xark} "
+    echo -e "${yellow} Username  : $selected_user ${Xark} "
+    lunatix_liner
+    Sc_Credit
+    
+  fi
+else
+  echo "File batasan IP tidak ditemukan untuk pengguna $user."
+fi

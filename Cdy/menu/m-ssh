@@ -1,0 +1,81 @@
+#!/bin/bash
+clear
+# // color format 38
+CC='\e[38;5;14m'  # 
+LO='\e[38;5;162m' # PURPLE HACKER
+UK='\e[38;5;99m'  # UNGU KOLOT
+BK='\e[38;5;196m' # BEREM KOLOT 
+R1='\e[38;5;155m' # HEJO SEMU BODAS
+R2='\e[38;5;49m'  # HEJO LIME / APEL
+BC='\e[38;5;195m' # BODAS CERAH PISAN
+HU='\e[38;5;115m' # HEJO SEMU ABU
+UB='\e[38;5;147m' # UNGU KABODASAN
+KT='\e[38;5;187m' # KONENG TARIGU
+# // color fromat 5 
+BlueCyan='\e[5;36m'
+WhiteBe='\e[5;37m'
+GreenBe='\e[5;32m'
+Xark='\e[0m'
+
+
+
+function Account_Banner() {
+clear
+  echo -e "${LO} ┌━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┐${Xark} "
+  echo -e "${R1}           SSH OPENVPN UDP             ${Xark} "
+  echo -e "${LO} └━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┘${Xark} "
+}
+
+
+
+function BR1() {
+  echo -e "${LO} ┌━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┐${Xark} "
+}
+
+function BR2() {
+  echo -e "${LO} └━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┘${Xark} "
+}
+
+
+function Menu_Features() {
+  BR1
+  echo -e "\e[38;5;162m │\e[97;1m[01]• CREATE ACCOUNT  "
+  echo -e "\e[38;5;162m │\e[97;1m[02]• TRIALL ACCOUNT  "
+  echo -e "\e[38;5;162m │\e[97;1m[03]• DELETE ACCOUNT  "
+  echo -e "\e[38;5;162m │\e[97;1m[04]• DAFTAR MEMBERS  "
+  echo -e "\e[38;5;162m │\e[97;1m[05]• AUTOMATIC KILL  "
+  echo -e "\e[38;5;162m │\e[97;1m[06]• CHECKS MULLOG   "
+  echo -e "\e[38;5;162m │\e[97;1m[07]• DELETE EXPIRED  "
+  echo -e "\e[38;5;162m │\e[97;1m[08]• CHANGE LIMITIP  "
+  echo -e "\e[38;5;162m │\e[97;1m[09]• RENEWS ACCOUNT  "
+  echo -e "\e[38;5;162m │\e[97;1m[10]• LOCKED ACCOUNT  "
+  echo -e "\e[38;5;162m │\e[97;1m[11]• UNLOCK ACCOUNT  "
+  echo -e "\e[38;5;162m │\e[97;1m[12]• CHANGE ALL IP   "
+  echo -e "\e[38;5;162m │\e[97;1m[13]• MONITOR USER    "
+  echo -e "\e[38;5;162m │\e[91;1m[xx]• EXIT ${Xark}    "
+  BR2
+  echo -e ""
+}
+
+# // Call Function
+Account_Banner
+Menu_Features
+
+# // Select Display
+read -p "   Just Input 1-13 or xx :  " Ltt
+case $Ltt in
+01 | 1) clear ; add-ssh ;;
+02 | 2) clear ; trial-ssh ;;
+03 | 3) clear ; del-ssh ;;
+04 | 4) clear ; member-ssh ;;
+05 | 5) clear ; auto-kill ;;
+06 | 6) clear ; mullog ;;
+07 | 7) clear ; xp ;;
+08 | 8) clear ; ganti-ip-ssh ;;
+09 | 9) clear ; renew-ssh ;;
+10) clear ; Lock ;;
+11) clear ; Unlock ;;
+12) clear ; Lt-on-off ;;
+13) clear ; cek-ssh ;;
+*) exit ;;
+esac

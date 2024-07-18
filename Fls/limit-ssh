@@ -1,0 +1,47 @@
+#!/bin/bash
+send_logg() {
+TEKS="
+Dsiable SSH Account Multilogin
+===========================
+Username: ${user}
+Login IP: ${cekcek} / ${iplimit}
+Akun Terkunci Selama 15menit
+jangan nakal makanya lol
+untung di Disable, kalau di Mov?
+LEWAT  HABIS!!  
+==========================="
+CHATID=$(cat /data/bot/id.txt)
+KEY=$(cat /data/bot/key.txt)
+TIME="10"
+URL="https://api.telegram.org/bot$KEY/sendMessage"
+
+curl -s --max-time $TIME -d "chat_id=$CHATID&disable_web_page_preview=1&text=$TEKS&parse_mode=html" $URL >/dev/null
+clear
+}
+
+#mulog=$(mesinssh)
+mulog=$(cek-ssh)
+date=$(date)
+data=( `ls /etc/lunatic/limit/ssh/ip`)
+
+for user in "${data[@]}"
+do
+    iplimit=$(cat /etc/lunatic/limit/ssh/ip/$user)
+    cekcek=$(echo -e "$mulog" | grep $user | wc -l)
+
+    if [[ $cekcek -gt $iplimit ]]; then
+        nais=3
+        passwd -l "$user" > /dev/null
+        send_logg
+
+        echo "passwd -u $user" | at now + 15 minutes > /dev/null
+    else
+        echo > /dev/null
+    fi
+
+    sleep 0.1
+done
+
+echo > /dev/null
+
+clear

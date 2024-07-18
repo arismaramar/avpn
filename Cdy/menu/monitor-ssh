@@ -1,0 +1,72 @@
+#!/bin/bash
+
+# Colors
+RED='\033[0;31m'
+NC='\033[0m'
+GREEN='\033[0;32m'
+ORANGE='\033[0;33m'
+BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'
+LIGHT='\033[0;37m'
+# Clear screen
+clear
+
+# Detect SSH log file
+if [ -e "/var/log/auth.log" ]; then
+    LOG="/var/log/auth.log"
+elif [ -e "/var/log/secure" ]; then
+    LOG="/var/log/secure"
+else
+    echo -e "${RED}Error: SSH log file not found.${NC}"
+    exit 1
+fi
+
+# Function to print section headers
+print_header() {
+    echo -e "${PURPLE}----------=[ $1 ]=-----------${NC}"
+    echo -e "${CYAN}ID  |  Username  |  IP Address   |  LIMIT-IP  ${NC}"
+    echo -e "${PURPLE}--------------------------------------------${NC}"
+}
+
+# Function to print SSH or Dropbear logins
+print_ssh_logins() {
+    data=( $(ps aux | grep -i $1 | awk '{print $2}') )
+    print_header "$2 User Login"
+    cat $LOG | grep -i $1 | grep -i "$3" > /tmp/login-db.txt
+    for PID in "${data[@]}"
+    do
+        cat /tmp/login-db.txt | grep "$1\[$PID\]" > /tmp/login-db-pid.txt
+        NUM=$(cat /tmp/login-db-pid.txt | wc -l)
+        if [ $NUM -eq 1 ]; then
+            USER=$(awk '{print $10}' /tmp/login-db-pid.txt)
+            IP=$(awk '{print $12}' /tmp/login-db-pid.txt)
+
+            
+            echo "$PID - $USER - $IP"
+
+
+            
+        fi
+    done
+    echo ""
+}
+
+# Function to print OpenVPN logins
+print_openvpn_logins() {
+    if [ -f "/etc/openvpn/server/$1" ]; then
+        print_header "OpenVPN $2 User Login"
+        awk -F ',' '/^CLIENT_LIST/ {print $2 " - " $3 " - " $8}' "/etc/openvpn/server/$1" | sed 's/,/      /g'
+        echo ""
+    fi
+}
+
+# Print SSH and Dropbear logins
+print_ssh_logins "dropbear" "Dropbear" "Password auth succeeded"
+#print_ssh_logins "sshd" "OpenSSH" "Accepted password for"
+
+# Print OpenVPN logins
+#print_openvpn_logins "openvpn-tcp.log" "TCP"
+#print_openvpn_logins "openvpn-udp.log" "UDP"
+
+exit 0

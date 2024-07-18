@@ -1,0 +1,74 @@
+#!/bin/bash
+clear
+# // color format 38
+CC='\e[38;5;14m'  # 
+LO='\e[38;5;162m' # PURPLE HACKER
+UK='\e[38;5;99m'  # UNGU KOLOT
+BK='\e[38;5;196m' # BEREM KOLOT 
+R1='\e[38;5;155m' # HEJO SEMU BODAS
+R2='\e[38;5;49m'  # HEJO LIME / APEL
+BC='\e[38;5;195m' # BODAS CERAH PISAN
+HU='\e[38;5;115m' # HEJO SEMU ABU
+UB='\e[38;5;147m' # UNGU KABODASAN
+KT='\e[38;5;187m' # KONENG TARIGU
+# // color fromat 5 
+BlueCyan='\e[5;36m'
+WhiteBe='\e[5;37m'
+GreenBe='\e[5;32m'
+Xark='\e[0m'
+
+
+
+function Account_Banner() {
+clear
+  echo -e "${LO} ┌━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┐${Xark} "
+  echo -e "${R1}            TROJAN LIBEV                ${Xark} "
+  echo -e "${LO} └━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┘${Xark} "
+}
+
+
+
+function BR1() {
+  echo -e "${LO} ┌━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┐${Xark} "
+}
+
+function BR2() {
+  echo -e "${LO} └━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┘${Xark} "
+}
+
+
+function Menu_Features() {
+  BR1
+  echo -e "\e[38;5;49m │\e[97;1m[01]• CREATE ACCOUNT  "
+  echo -e "\e[38;5;49m │\e[97;1m[02]• TRIALL ACCOUNT  "
+  echo -e "\e[38;5;49m │\e[97;1m[03]• DELETE ACCOUNT  "
+  echo -e "\e[38;5;49m │\e[97;1m[04]• DAFTAR MEMBERS  "
+  echo -e "\e[38;5;49m │\e[97;1m[05]• RENEWS ACCOUNT  "
+  echo -e "\e[38;5;49m │\e[97;1m[06]• CHANGE LIMITIP  "
+  echo -e "\e[38;5;49m │\e[97;1m[07]• MONITOR USER-S  "
+  echo -e "\e[38;5;49m │\e[97;1m[08]• DETAIL ACCOUNT  "
+  echo -e "\e[38;5;49m │\e[97;1m[09]• CHANGE QUOTA  "
+  echo -e "\e[38;5;49m │\e[91;1m[xx]• EXIT ${Xark}    "
+  BR2
+  echo -e ""
+}
+
+# // Call Function
+Account_Banner
+Menu_Features
+
+# // Select Display
+
+read -p "  Just Input 1-8 or xx :  " Ltt
+case $Ltt in
+01 | 1) clear ; add-tro ;;
+02 | 2) clear ; trial-tro ;;
+03 | 3) clear ; del-tro ;;
+04 | 4) clear ; member-tro ;;
+05 | 5) clear ; renew-tro ;;
+06 | 6) clear ; ganti-ip-trojan ;;
+07 | 7) clear ; cek-tro ;;
+08 | 8) clear ; user-tro ;;
+09 | 9) clear ; change-trojan-qouta ;;
+*) exit ;;
+esac

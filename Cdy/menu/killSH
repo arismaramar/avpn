@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# Fungsi untuk mengirim log ke Telegram
+function send_logg() {
+    KEY_TELE=$(sed -n '1p' /root/.notifbot | awk '{print $1}')
+    ID_TELE=$(sed -n '2p' /root/.notifbot | awk '{print $1}')
+    URL="https://api.telegram.org/bot${KEY_TELE}/sendMessage"
+    TIME="10"
+    TEXT="
+    <code>====================</code>
+    <code>🔏MULTI LOGIN SSH🔏</code>
+    <code>====================</code>
+    <code>📩SSH TYPE📩</code>
+    <code>====================</code>
+    <code> USERNAME : $user </code>
+    <code> LIMIT IP : $iplimit IP</code>
+    <code> LOGIN IP : $cekcek IP</code>
+    <code>====================</code>
+    <code> LOCKED 15 MIN </code>
+    <code>====================</code>
+    "
+
+    # Mengirim pesan menggunakan curl ke API Telegram
+    curl -s -X POST $URL -d chat_id=$ID_TELE -d text="$TEXT" -d parse_mode="HTML"
+}
+
+# Mendapatkan log SSH terkini
+mulog=$(cek-ssh)
+date=$(date)
+data=( $(ls /etc/lunatic/limit/ssh/ip) )
+
+for user in "${data[@]}"
+do
+    iplimit=$(cat /etc/lunatic/limit/ssh/ip/$user)
+    cekcek=$(echo -e "$mulog" | grep "$user" | wc -l)
+
+    if [[ $cekcek -gt $iplimit ]]; then
+        passwd -l "$user" > /dev/null  # Mengunci akun jika batas IP terlampaui
+        send_logg  # Mengirimkan pesan log ke Telegram
+        echo "passwd -u $user" | at now + 15 minutes > /dev/null  # Mengembalikan akses setelah 15 menit
+    fi
+
+    sleep 0.1
+done

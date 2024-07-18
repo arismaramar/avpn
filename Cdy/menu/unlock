@@ -1,0 +1,127 @@
+#!/bin/bash
+red='\e[1;31m'
+green='\e[1;32m'
+NC='\e[0m'
+green() { echo -e "\\033[32;1m${*}\\033[0m"; }
+red() { echo -e "\\033[31;1m${*}\\033[0m"; }
+echo -e "\e[32mloading...\e[0m"
+clear
+
+runn='\e[38;5;14m' 
+acc='\e[38;5;146m'
+LO='\e[38;5;162m' # PURPLE SANGAR
+UK='\e[38;5;99m'  # UNGU KOLOT
+BK='\e[38;5;196m' # BEREM KOLOT 
+R1='\e[38;5;155m' # HEJO SEMU BODAS
+R2='\e[38;5;49m'  # HEJO LIME / APEL
+BC='\e[38;5;195m' # BODAS CERAH PISAN
+HU='\e[38;5;115m' # HEJO SEMU ABU
+UB='\e[38;5;147m' # UNGU KABODASAN
+KT='\e[38;5;187m' # KONENG TARIGU
+Suffix='\e[0m'
+Xark="\e[0m"
+
+# . Liner 
+function Liner() {
+  echo -e "${LO} ——————————————————————————————————— ${Xark} "
+}
+
+# . Banner
+function Banner() {
+echo -e "${R1}          DETAILS ACCOUNT          \e[0m"
+}
+
+function Lunatic_Banner() {
+clear
+Liner
+echo -e "\033[92;1m           ANGGUNvpn TUNNELING       \033[0m"
+Liner
+}
+
+function Sc_Credit(){
+sleep 1
+Liner
+echo -e "\e[0;36m      Terimakasih Telah Menggunakan \033[0m"
+echo -e "\e[0;36m             Script Credit \033[0m"
+echo -e "\e[0;36m           ANGGUNvpn Tunneling  \033[0m"
+Liner
+exit 1
+}
+
+# // jalankan perintah sleep 3 & loading $!
+loading() {
+  local pid=$1
+  local delay=0.1
+  local spin='-\|/'
+
+  while ps -p $pid > /dev/null; do
+    local temp=${spin#?}
+    printf "[%c] " "$spin"
+    local spin=$temp${spin%"$temp"}
+    sleep $delay
+    printf "\b\b\b\b\b\b"
+  done
+
+  printf "    \b\b\b\b"
+}
+
+
+
+
+clear
+echo -e "${LO}┌──────────────────────────────────────────┐\033[0m"
+echo -e "${R1}   USERNAME       EXP DATE         STATUS \e[0m"
+echo -e "${LO}└──────────────────────────────────────────┘\033[0m"
+echo -e "${LO}┌──────────────────────────────────────────┐\033[0m"
+while read expired
+do
+AKUN="$(echo $expired | cut -d: -f1)"
+ID="$(echo $expired | grep -v nobody | cut -d: -f3)"
+exp="$(chage -l $AKUN | grep "Account expires" | awk -F": " '{print $2}')"
+status="$(passwd -S $AKUN | awk '{print $2}' )"
+if [[ $ID -ge 1000 ]]; then
+if [[ "$status" = "L" ]]; then
+ printf "%-17s %2s %-17s %2s \n" "  $AKUN" "$exp   " "LOCKED${NORMAL}"
+else
+ printf "%-17s %2s %-17s %2s \n" "  $AKUN" "$exp   " "UNLOCKED${NORMAL}"
+fi
+fi
+done < /etc/passwd
+JUMLAH="$(awk -F: '$3 >= 1000 && $1 != "nobody" {print $1}' /etc/passwd | wc -l)"
+echo -e "${LO}└──────────────────────────────────────────┘\033[0m"
+echo -e "${LO}┌──────────────────────────────────────────┐\033[0m"
+echo -e "${R1}   Account number: $JUMLAH   user \e[0m"
+echo -e "${LO}└──────────────────────────────────────────┘\033[0m"
+echo " "
+echo " "
+read -p "Input Username To Unlock :   " username
+
+
+
+
+sleep 1 & loading $!
+
+egrep "^$username" /etc/passwd >/dev/null
+if [ $? -eq 0 ]; then
+# proses mengganti passwordnya
+passwd -u $username
+clear
+  Lunatic_Banner
+  echo " "
+  Liner
+  echo ""
+  echo -e "\e[32;1m successfully ${Xark}"
+  echo ""
+  echo -e "${R1} Username  : $username${Xark}"
+  echo -e "${R1} Status    : Unlock ${Xark} "
+  echo ""
+  Liner
+  Sc_Credit
+  
+else
+Lunatic_Banner
+echo " "
+echo -e "Username ${red}$username${NC} not found in your server."
+echo " "    
+Sc_Credit
+fi

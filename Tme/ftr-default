@@ -1,0 +1,98 @@
+#!/bin/bash
+clear
+# // color format 38
+CC='\e[38;5;14m'  # 
+LO='\e[38;5;162m' # PURPLE HACKER
+UK='\e[38;5;99m'  # UNGU KOLOT
+BK='\e[38;5;196m' # BEREM KOLOT 
+R1='\e[38;5;155m' # HEJO SEMU BODAS
+LO='\e[38;5;49m'  # HEJO LIME / APEL
+BC='\e[38;5;195m' # BODAS CERAH PISAN
+HU='\e[38;5;115m' # HEJO SEMU ABU
+UB='\e[38;5;147m' # UNGU KABODASAN
+KT='\e[38;5;187m' # KONENG TARIGU
+# // color fromat 5 
+BlueCyan='\e[5;36m'
+WhiteBe='\e[5;37m'
+GreenBe='\e[5;32m'
+Xark='\e[0m'
+
+
+
+function Banner_Libev() {
+clear
+  echo -e "${LO} ┌━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┐${Xark} "
+  echo -e "${R1}           FEATURES LIBEV             ${Xark} "
+  echo -e "${LO} └━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┘${Xark} "
+}
+
+
+
+function BR1() {
+  echo -e "${LO} ┌━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┐${Xark} "
+}
+
+function BLO() {
+  echo -e "${LO} └━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┘${Xark} "
+}
+
+
+function Menu_Features() {
+  BR1
+  echo -e "\e[38;5;49m │\e[92;1m[01]•\e[97;1m RUNNING SERVICE  "
+  echo -e "\e[38;5;49m │\e[92;1m[02]•\e[97;1m RESTART SERVICE  "
+  echo -e "\e[38;5;49m │\e[92;1m[03]•\e[97;1m AUTOREBOOT VPS  "
+  echo -e "\e[38;5;49m │\e[92;1m[04]•\e[97;1m MONITOR VPS INF  "
+  echo -e "\e[38;5;49m │\e[92;1m[05]•\e[97;1m SPEEDTEST VPS  "
+  echo -e "\e[38;5;49m │\e[92;1m[06]•\e[97;1m DELETE AKUN XP   "
+  echo -e "\e[38;5;49m │\e[92;1m[07]•\e[97;1m CHANGE BANNER   "
+  echo -e "\e[38;5;49m │\e[92;1m[08]•\e[97;1m CHANGE DOMAIN  "
+  echo -e "\e[38;5;49m │\e[92;1m[09]•\e[97;1m FIXX HAPROXY  "
+  echo -e "\e[38;5;49m │\e[92;1m[10]•\e[97;1m FIXX NGINX  "
+  echo -e "\e[38;5;49m │\e[92;1m[11]•\e[97;1m AUTO POINTING  "
+  echo -e "\e[38;5;49m │\e[92;1m[12]•\e[97;1m INSTAL FIX UDP   "
+  echo -e "\e[38;5;49m │\e[92;1m[13]•\e[97;1m BACKUP BOT VIA    "
+  echo -e "\e[38;5;49m │\e[92;1m[14]•\e[97;1m CLEAR ALL CACHE  "
+  echo -e "\e[38;5;49m │\e[92;1m[15]•\e[97;1m CLEAR ALL LOGS  "
+  echo -e "\e[38;5;49m │\e[92;1m[16]•\e[97;1m CLEAR LOGS FILE  "
+  echo -e "\e[38;5;49m │\e[92;1m[17]•\e[97;1m CHECK BANDWIDTH   "
+  echo -e "\e[38;5;49m │\e[92;1m[18]•\e[97;1m SCRIPT INFORMATION    "
+  echo -e "\e[38;5;49m │\e[92;1m[19]•\e[97;1m GANTI TAMPILAN MENU  "
+  echo -e "\e[38;5;49m │\e[92;1m[20]•\e[97;1m ABOUT  "
+  echo -e "\e[38;5;49m │\e[92;1m[xx]•\e[0;31m EXIT ${Xark}    "
+  BLO
+  echo -e ""
+}
+
+function Select_Menu() {
+read -p "  Just Input 1-20 or xx :  " Ltt
+case $Ltt in
+1) clear ; run ;;
+2) clear ; reset ;;
+3) clear ; autoreboot ;;
+4) clear ; gotop ;;
+5) clear ; speedtest ;;
+6) clear ; xp ;;
+7) clear ; nano /etc/banner.txt ;;
+8) clear ; change-domain ;;
+9) clear ; fixhap ;;
+10) clear ; fixcert ;;
+11) clear ; cf ;;
+12) clear ; UDEPE ;;
+13) clear ; m-bkp ;;
+14) clear ; clearcache ;;
+15) clear ; clearlog ;;
+16) clear ; delet-cache-file ;;
+17) clear ; vnstat ;;
+18) clear ; neo ;;
+19) clear ; m-tme ;;
+20) clear ; Sc_About ;;
+*) welcome ;;
+esac
+}
+
+
+# // Call Function
+Banner_Libev
+Menu_Features
+Select_Menu

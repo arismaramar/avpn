@@ -1,0 +1,107 @@
+#!/bin/bash
+dateFromServer=$(curl -v --insecure --silent https://google.com/ 2>&1 | grep Date | sed -e 's/< Date: //')
+biji=`date +"%Y-%m-%d" -d "$dateFromServer"`
+# Color
+RED='\033[0;31m'
+NC='\033[0m'
+GREEN='\033[0;32m'
+ORANGE='\033[0;33m'
+BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'
+LIGHT='\033[0;37m'
+red='\e[1;31m'
+green='\e[0;32m'
+NC='\e[0m'
+red='\e[1;31m'
+green='\e[0;32m'
+NC='\e[0m'
+
+
+BlueCyan="\033[5;36m"
+WhiteBe="\033[5;37m"
+yellow="\033[0;33m"
+ungu="\033[0;35m"
+Xark="\033[0m"
+BlueCyan="\033[5;36m"
+WhiteBe="\033[5;37m"
+GreenBe="\033[5;32m"
+# . Liner 
+function Liner() {
+  echo -e "\e[33;1m ——————————————————————————————————— ${Xark} "
+}
+
+function Lunatic_Banner() {
+clear
+Liner
+echo -e "\e[92;1m           ANGGUNvpn TUNNELING      ${Xark} "
+Liner
+}
+
+
+
+green() { echo -e "\\033[32;1m${*}\\033[0m"; }
+red() { echo -e "\\033[31;1m${*}\\033[0m"; }
+clear
+
+
+NUMBER_OF_CLIENTS=$(grep -c -E "^#tro-user# " "/etc/xray/tro.json")
+	if [[ ${NUMBER_OF_CLIENTS} == '0' ]]; then
+        Liner
+		echo "Name $user is Wrong !!"
+		echo ""
+		echo -e "${yellow} Nama $user Ini Tidak ada- ${Xark} "
+		echo -e "${yellow} Mohon Pastikan Username Ada ${Xark}"
+        Liner
+		read -p "Back To Menu"
+        menu
+	fi
+
+	clear
+	Liner
+    echo -e "\e[0;36m          Delete Akun Trojan           ${Xark} "    
+    Liner
+# Baca nama pengguna dari tro.json, pisahkan username dan tanggal expired, lalu hilangkan duplikat
+users=$(grep -E "^#tro-user# " "/etc/xray/tro.json" | sed -E 's/^#tro-user# ([^ ]+).*/\1/' | awk '!seen[$0]++')
+
+
+# Tampilkan nama pengguna dengan nomor urut
+############################################
+echo ""
+i=1
+for user in $users; do
+    echo "$i) $user"
+    ((i++))
+done
+echo ""
+Liner
+echo ""
+############################################
+read -p " Just input Number: " number
+
+# Dapatkan username berdasarkan nomor yang dipilih
+selected_user=$(echo "$users" | sed -n "${number}p")
+
+if [ -z "$selected_user" ]; then
+    echo -e "\e[31;1m number is missing or incorrect\e[0m"
+    exit 1
+
+    else
+    exp=$(grep -wE "^#tro-user# $selected_user" "/etc/xray/tro.json" | cut -d ' ' -f 3 | sort | uniq)
+    sed -i "/^#tro-user# $selected_user $exp/,/^},{/d" /etc/xray/tro.json
+    sed -i "/#tro# $selected_user $exp/,/^},{/d" /etc/trojan/.trojan.db
+    rm -rf /etc/trojan/$selected_user
+    rm -rf /etc/lunatic/limit/trojan/ip/$selected_user
+    rm -rf /detail/tro/$selected_user.txt
+    rm -rf /var/www/html/$selected_user.txt
+    systemctl restart xray > /dev/null 2>&1
+    echo ""
+    echo ""
+    Lunatic_Banner
+    Liner
+    echo -e "${GreenBe} Succesfuly${Xark} "
+    Liner
+    echo -e "${yellow} Username ${GreenBe}$user ${Xark} "
+    echo -e "${yellow} Sukses Di Hapus ${Xark} "
+    Liner
+    fi

@@ -1,0 +1,125 @@
+#!/bin/bash
+clear
+
+function checking_sc() {
+    MYIP=$(curl -sS ipv4.icanhazip.com)
+    IZIN=$(curl -sS https://raw.githubusercontent.com/arismaramar/izin/main/ip | awk '{print $4}')
+
+    if echo "$IZIN" | grep -wq "$MYIP"; then
+        echo "IZIN DITERIMA ANJING"
+    else
+        echo -e "\e[38;5;162m────────────────────────────────────────────\033[0m"
+        echo -e "\033[44m          404 NOT FOUND AUTOSCRIPT          \033[0m"
+        echo -e "\e[38;5;162m────────────────────────────────────────────\033[0m"
+        echo -e ""
+        echo -e "           \e[38;5;196mPERMISSION DENIED !\033[0m"
+        echo -e "  \033[0;36mYour VPS IP $MYIP has been banned.\033[0m"
+        echo -e "    \033[0;36mBuy access permissions for scripts.\033[0m"
+        echo -e "            \033[0;36mContact Admin :\033[0m"
+        echo -e "\e[38;5;162m────────────────────────────────────────────\033[0m"
+        exit 1  # Exit with non-zero status to indicate failure
+    fi
+}
+
+checking_sc
+clear
+
+
+
+
+#. LINER
+
+function lunatix_liner() {
+  echo -e "\e[38;5;162m ———————————————————————————————————————\033[0m"
+}
+
+
+#. TEXT
+
+function Sc_Credit(){
+sleep 1
+lunatix_liner
+echo -e "\033[0;36m      Terimakasih Telah Menggunakan \033[0m"
+echo -e "\033[0;36m             Script Credit \033[0m"
+echo -e "\033[0;36m           ANGGUNvpn Tunneling  \033[0m"
+lunatix_liner
+exit 1
+}
+
+
+#. LOADING
+# // jalankan perintah sleep 3 & loading $!
+loading() {
+  local pid=$1
+  local delay=0.1
+  local spin='-\|/'
+
+  while ps -p $pid > /dev/null; do
+    local temp=${spin#?}
+    printf "[%c] " "$spin"
+    local spin=$temp${spin%"$temp"}
+    sleep $delay
+    printf "\b\b\b\b\b\b"
+  done
+
+  printf "    \b\b\b\b"
+}
+
+
+function Lunatic_Banner() {
+clear
+lunatix_liner
+echo -e "\033[92;1m           ANGGUNvpn TUNNELING       \033[0m"
+lunatix_liner
+}
+
+
+
+echo -e "\e[33;1m┌──────────────────────────────────────────┐\033[0m"
+echo -e "\e[92;1m   USERNAME       EXP DATE         STATUS           \033[0m"
+echo -e "\e[33;1m└──────────────────────────────────────────┘\033[0m"
+echo -e "\e[33;1m┌──────────────────────────────────────────┐\033[0m"
+while read expired
+do
+AKUN="$(echo $expired | cut -d: -f1)"
+ID="$(echo $expired | grep -v nobody | cut -d: -f3)"
+exp="$(chage -l $AKUN | grep "Account expires" | awk -F": " '{print $2}')"
+status="$(passwd -S $AKUN | awk '{print $2}' )"
+if [[ $ID -ge 1000 ]]; then
+if [[ "$status" = "L" ]]; then
+ printf "%-17s %2s %-17s %2s \n" "  $AKUN" "$exp   " "LOCKED${NORMAL}"
+else
+ printf "%-17s %2s %-17s %2s \n" "  $AKUN" "$exp   " "UNLOCKED${NORMAL}"
+fi
+fi
+done < /etc/passwd
+JUMLAH="$(awk -F: '$3 >= 1000 && $1 != "nobody" {print $1}' /etc/passwd | wc -l)"
+echo -e "\e[33;1m└──────────────────────────────────────────┘\033[0m"
+echo -e "\e[33;1m┌──────────────────────────────────────────┐\033[0m"
+echo -e "\e[92;1m   Account number: $JUMLAH   user \e[0m"
+echo -e "\e[33;1m└──────────────────────────────────────────┘\033[0m"
+echo -e ""
+read -p "Input Username you want to lock: " username
+
+# // Loading
+sleep 0.8 & loading $!
+
+egrep "^$username" /etc/passwd >/dev/null
+if [ $? -eq 0 ]; then
+# proses mengganti passwordnya
+passwd -l $username
+clear
+Lunatic_Banner
+  echo " "
+  lunatix_liner
+  echo -e "${GreenBe} Succesfully \e[0m "
+  echo -e ""
+  echo -e "\e[0;33m Username  : $username \e[0m "
+  echo -e "\e[0;33m Status    : LOCKED!! \e[0m "
+  echo -e ""
+  lunatix_liner
+Sc_Credit
+else
+echo "Username not found on your server."
+    exit 1
+fi

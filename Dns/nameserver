@@ -1,0 +1,24 @@
+#!/bin/sh
+REPO="https://github.com/arismaramar/sldns/raw/main/"
+ns_domain_cloudflare() {
+	cd
+	wget https://github.com/arismaramar/pointing/raw/main/cfnsdomain.sh >/dev/null 2>&1 && chmod +x cfnsdomain.sh && ./cfnsdomain.sh
+}
+
+setup_dnstt() {
+	NSVPSKU=$(cat /etc/xray/dns)
+	cd
+	rm -rf *
+	mkdir -p /etc/slowdns
+	wget -O dnstt-server "${REPO}Slowdns/dnstt-server" && chmod +x dnstt-server >/dev/null 2>&1
+	wget -O dnstt-client "${REPO}Slowdns/dnstt-client" && chmod +x dnstt-client >/dev/null 2>&1
+	./dnstt-server -gen-key -privkey-file server.key -pubkey-file server.pub
+	chmod +x *
+	mv * /etc/slowdns
+	wget -O /etc/systemd/system/client.service "${REPO}Slowdns/client" >/dev/null 2>&1
+	wget -O /etc/systemd/system/server.service "${REPO}Slowdns/server" >/dev/null 2>&1
+	sed -i "s/xxxx/$NSVPSKU/g" /etc/systemd/system/client.service 
+	sed -i "s/xxxx/$NSVPSKU/g" /etc/systemd/system/server.service 
+}
+ns_domain_cloudflare
+setup_dnstt

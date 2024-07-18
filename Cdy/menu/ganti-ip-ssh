@@ -1,0 +1,164 @@
+#!/bin/bash
+clear
+
+function checking_sc() {
+    MYIP=$(curl -sS ipv4.icanhazip.com)
+    IZIN=$(curl -sS https://raw.githubusercontent.com/arismaramar/izin/main/ip | awk '{print $4}')
+
+    if echo "$IZIN" | grep -wq "$MYIP"; then
+        echo "IZIN DITERIMA ANJING"
+    else
+        echo -e "\e[38;5;162m────────────────────────────────────────────\033[0m"
+        echo -e "\033[44m          404 NOT FOUND AUTOSCRIPT          \033[0m"
+        echo -e "\e[38;5;162m────────────────────────────────────────────\033[0m"
+        echo -e ""
+        echo -e "           \e[38;5;196mPERMISSION DENIED !\033[0m"
+        echo -e "  \033[0;36mYour VPS IP $MYIP has been banned.\033[0m"
+        echo -e "    \033[0;36mBuy access permissions for scripts.\033[0m"
+        echo -e "            \033[0;36mContact Admin :\033[0m"
+        echo -e "\e[38;5;162m────────────────────────────────────────────\033[0m"
+        exit 1  # Exit with non-zero status to indicate failure
+    fi
+}
+
+checking_sc
+clear
+
+
+yellow="\033[0;33m"
+ungu="\033[0;35m"
+Red="\033[91;1m"
+YELLOW="\033[93;1m"
+Xark="\033[0m"
+BlueCyan="\e[33;1m"
+Cyan="\033[96;1m"
+Purple="\033[95;1m"
+Green="\033[92;1m"
+WhiteBe="\033[5;37m"
+GreenBe="\033[5;32m"
+YellowBe="\033[5;33m"
+BlueBe="\033[5;34m"
+
+
+#. LINER
+
+function lunatix_liner() {
+  echo -e "\e[38;5;162m ———————————————————————————————————————\033[0m"
+}
+
+
+#. TEXT
+
+function Sc_Credit(){
+sleep 1
+lunatix_liner
+echo -e "\033[0;36m      Terimakasih Telah Menggunakan \033[0m"
+echo -e "\033[0;36m             Script Credit \033[0m"
+echo -e "\033[0;36m           ANGGUNvpn Tunneling  \033[0m"
+lunatix_liner
+exit 1
+}
+
+
+#. LOADING
+# // jalankan perintah sleep 3 & loading $!
+loading() {
+  local pid=$1
+  local delay=0.1
+  local spin='-\|/'
+
+  while ps -p $pid > /dev/null; do
+    local temp=${spin#?}
+    printf "[%c] " "$spin"
+    local spin=$temp${spin%"$temp"}
+    sleep $delay
+    printf "\b\b\b\b\b\b"
+  done
+
+  printf "    \b\b\b\b"
+}
+
+
+function Lunatic_Banner() {
+clear
+lunatix_liner
+echo -e "\033[92;1m           ANGGUNvpn TUNNELING       \033[0m"
+lunatix_liner
+}
+
+clear
+echo -e "\e[33;1m┌──────────────────────────────────────────┐\033[0m"
+echo "   USERNAME       EXP DATE         STATUS"
+echo -e "\e[33;1m└──────────────────────────────────────────┘\033[0m"
+echo -e "\e[33;1m┌──────────────────────────────────────────┐\033[0m"
+while read expired
+do
+AKUN="$(echo $expired | cut -d: -f1)"
+ID="$(echo $expired | grep -v nobody | cut -d: -f3)"
+exp="$(chage -l $AKUN | grep "Account expires" | awk -F": " '{print $2}')"
+status="$(passwd -S $AKUN | awk '{print $2}' )"
+if [[ $ID -ge 1000 ]]; then
+if [[ "$status" = "L" ]]; then
+ printf "%-17s %2s %-17s %2s \n" "  $AKUN" "$exp   " "LOCKED${NORMAL}"
+else
+ printf "%-17s %2s %-17s %2s \n" "  $AKUN" "$exp   " "UNLOCKED${NORMAL}"
+fi
+fi
+done < /etc/passwd
+JUMLAH="$(awk -F: '$3 >= 1000 && $1 != "nobody" {print $1}' /etc/passwd | wc -l)"
+echo -e "\e[33;1m└──────────────────────────────────────────┘\033[0m"
+echo -e "\e[33;1m┌──────────────────────────────────────────┐\033[0m"
+echo "   Account number: $JUMLAH   user"
+echo -e "\e[33;1m└──────────────────────────────────────────┘\033[0m"
+echo -e ""
+read -p " input username: " user
+limit_file="/etc/lunatic/limit/ssh/ip/$user"
+
+# Validasi apakah file batasan IP sudah ada
+if [ -e "$limit_file" ]; then
+  current_iplimit=$(cat "$limit_file")
+  Lunatic_Banner
+  lunatix_liner
+  echo -e "${Cyan} Before ${Xark} "
+  echo -e ""
+  echo -e "${yellow} Username   : $user ${Xark} "
+  echo -e "${yellow} Ip Limit   : $current_iplimit ${Xark}"
+  echo -e ""
+  lunatix_liner
+  echo -e ""
+  read -p " Input New Ip   : " new_iplimit
+
+sleep 0.8 & loading $!
+
+
+  # Validasi jika masukan kosong
+  if [ -z "$new_iplimit" ]; then
+    echo -e "${White} Invallid !! "
+  else
+    echo "$new_iplimit" > "$limit_file"
+    Lunatic_Banner
+    lunatix_liner
+    echo -e "${GreenBe} Succesfully ${Xark} "
+    echo -e ""
+    echo -e "${Cyan} After  ${Xark} "
+    echo -e ""
+    echo -e "${yellow} New Ip   : $new_iplimit ${Xark} "
+    echo -e "${yellow} Username : $user ${Xark} "
+    echo -e ""
+    lunatix_liner
+    Sc_Credit
+    
+  fi
+else
+
+Lunatic_Banner
+lunatix_liner
+  echo -e "${Red} Sorry ${Xark} "
+echo ""
+  echo -e "${YELLOW} Username   : $user "
+  echo -e "${YELLOW} IP LIMIT   : invallid !! ${Xark} "
+echo ""
+lunatix_liner
+Sc_Credit
+
+fi

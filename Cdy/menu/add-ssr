@@ -1,0 +1,597 @@
+#!/bin/bash
+clear
+
+function checking_sc() {
+    MYIP=$(curl -sS ipv4.icanhazip.com)
+    IZIN=$(curl -sS https://raw.githubusercontent.com/arismaramar/izin/main/ip | awk '{print $4}')
+
+    if echo "$IZIN" | grep -wq "$MYIP"; then
+        echo "IZIN DITERIMA ANJING"
+    else
+        echo -e "\e[38;5;162m────────────────────────────────────────────\033[0m"
+        echo -e "\033[44m          404 NOT FOUND AUTOSCRIPT          \033[0m"
+        echo -e "\e[38;5;162m────────────────────────────────────────────\033[0m"
+        echo -e ""
+        echo -e "           \e[38;5;196mPERMISSION DENIED !\033[0m"
+        echo -e "  \033[0;36mYour VPS IP $MYIP has been banned.\033[0m"
+        echo -e "    \033[0;36mBuy access permissions for scripts.\033[0m"
+        echo -e "            \033[0;36mContact Admin :\033[0m"
+        echo -e "\e[38;5;162m────────────────────────────────────────────\033[0m"
+        exit 1  # Exit with non-zero status to indicate failure
+    fi
+}
+
+checking_sc
+clear
+
+
+
+
+
+
+
+
+# . Liner 
+LO='\e[38;5;162m' # PURPLE SANGAR
+R1='\e[38;5;155m' # HEJO SEMU BODAS
+RN='\e[38;5;14m' 
+AC='\e[38;5;146m'
+UK='\e[38;5;99m'  # UNGU KOLOT
+BK='\e[38;5;196m' # BEREM KOLOT 
+R2='\e[38;5;49m'  # HEJO LIME / APEL
+BC='\e[38;5;195m' # BODAS CERAH PISAN
+HU='\e[38;5;115m' # HEJO SEMU ABU
+UB='\e[38;5;147m' # UNGU KABODASAN
+KT='\e[38;5;187m' # KONENG TARIGU
+Suffix='\e[0m'    # PENUTUP WARNA
+Xark="\e[0m"      # PENUTUP WARNA
+# . Liner 
+function baris_panjang() {
+  echo -e "${LO} ——————————————————————————————————— ${Xark} "
+}
+
+function Lunatic_Banner() {
+clear
+baris_panjang
+echo -e "${R1}          ANGGUNvpn TUNNELING     ${Xark} "
+baris_panjang
+}
+
+function Sc_Credit(){
+sleep 1
+baris_panjang
+echo -e "\033[0;36m    Terimakasih Telah Menggunakan \033[0m"
+echo -e "\033[0;36m            Script Credit \033[0m"
+echo -e "\033[0;36m          ANGGUNvpn Tunneling  \033[0m"
+baris_panjang
+exit 1
+}
+
+
+# // jalankan perintah :  sleep 3 & loading $!
+loading() {
+  local pid=$1
+  local delay=0.1
+  local spin='-\|/'
+
+  while ps -p $pid > /dev/null; do
+    local temp=${spin#?}
+    printf "[%c] " "$spin"
+    local spin=$temp${spin%"$temp"}
+    sleep $delay
+    printf "\b\b\b\b\b\b"
+  done
+
+  printf "    \b\b\b\b"
+}
+
+
+#.          CREATE AKUN SHADOWSOCKS
+#################################################
+
+Lunatic_Banner
+baris_panjang
+  echo -e " \033[32mJust input a number for-\033[0m"
+  echo -e " \033[32mQuota Limit\033[0m"
+  echo -e " \033[32mLimit IP\033[0m"
+  echo -e " \033[37mFormat GB"
+echo ""
+  echo -e " \033[33m0\033[0m \033[0mfor Unlimited\033[0m"
+  echo -e " \033[33m0\033[0m \033[0mfor No Limit\033[0m"
+echo ""
+baris_panjang
+echo ""
+read -rp " Username         : " -e user
+		CLIENT_EXISTS=$(grep -w $user /etc/xray/ssr.json | wc -l)
+
+		if [[ ${CLIENT_EXISTS} == '1' ]]; then
+clear
+baris_panjang
+			echo ""
+			echo -e "\e[91m Sorry Nickname is Ready ! \033[0m "
+			echo ""
+			read -p "Press any key to back on menu"
+			add-ssr
+		fi
+#	done
+
+cipher="aes-128-gcm"
+uuid=$(cat /proc/sys/kernel/random/uuid)
+echo
+read -p " Limit User (GB)  : " Quota
+echo
+read -p " Limit User (IP)  : " iplimit
+echo
+read -p " Expired (days)   : " masaaktif
+echo
+
+sleep 1 & loading $!
+
+
+
+#.          LIMIT IP SHADOWSOCKS
+#################################################
+if [[ $iplimit -gt 0 ]]; then
+mkdir -p /etc/lunatic/limit/shadowsocks/ip
+echo -e "$iplimit" > /etc/lunatic/limit/shadowsocks/ip/$user
+else
+echo > /dev/null
+fi
+#################################################
+
+
+
+#.             DATA QUOTA SHADOWSOCKS
+#################################################
+if [[ $Quota -gt 0 ]]; then
+echo > /dev/null
+fi
+
+QUOTA1=$(echo "${Quota}" | sed 's/[^0-9]*//g')
+QUOTA2=$((${QUOTA1} * 1024 * 1024 * 1024))
+
+if [[ ${QUOTA1} != "0" ]]; then
+  echo "${QUOTA2}" >/etc/lunatic/limit/shadowsocks/quota/${user}
+fi
+################################################# 
+
+
+
+#.             DATA AKUN SHADOWSOCKS.db
+#################################################
+DATADB=$(cat /etc/shadowsocks/.shadowsocks.db | grep "^#ssr#" | grep -w "${user}" | awk '{print $2}')
+if [[ "${DATADB}" != '' ]]; then
+  sed -i "/\b${user}\b/d" /etc/shadowsocks/.shadowsocks.db
+fi
+#################################################
+
+#.           DETAIL AKUN SHADOWSOCKS
+#################################################
+# Data akun user : nama limitip quota expired domain uuid
+echo "#ssr# ${user} ${iplimit} ${exp} " >>/etc/shadowsocks/.shadowsocks.db
+#################################################
+
+
+
+#.          DATAA TANGGAL
+#################################################
+tgl=$(date -d "$masaaktif days" +"%d")
+bln=$(date -d "$masaaktif days" +"%b")
+thn=$(date -d "$masaaktif days" +"%Y")
+expe="$tgl $bln, $thn"
+tgl2=$(date +"%d")
+bln2=$(date +"%b")
+thn2=$(date +"%Y")
+tnggl="$tgl2 $bln2, $thn2"
+exp=`date -d "$masaaktif days" +"%Y-%m-%d"`
+sed -i '/#LUNATIX-SDWSK#$/a\#ssr-user# '"$user $exp"'\
+},{"password": "'""$uuid""'","method": "'""$cipher""'","email": "'""$user""'"' /etc/xray/ssr.json
+sed -i '/#LUNATIX-GRPC#$/a\#ssr-user# '"$user $exp"'\
+},{"password": "'""$uuid""'","method": "'""$cipher""'","email": "'""$user""'"' /etc/xray/ssr.json
+echo $cipher:$uuid > /tmp/log
+shadowsocks_base64=$(cat /tmp/log)
+echo -n "${shadowsocks_base64}" | base64 > /tmp/log1
+shadowsocks_base64e=$(cat /tmp/log1)
+#################################################
+
+
+
+#.              LINK JSON
+#################################################
+shadowsockslink="ss://${shadowsocks_base64e}@$domain:$tls?plugin=xray-plugin;mux=0;path=/ss-ws;host=$domain;tls#${user}"
+shadowsockslink1="ss://${shadowsocks_base64e}@$domain:$tls?plugin=xray-plugin;mux=0;serviceName=ss-grpc;host=$domain;tls#${user}"
+#buat ss WEBSOCKET
+sslinkws="ss://${shadowsocks_base64e}@${domain}:443?path=/ss-ws&security=tls&encryption=none&type=ws#${user}"
+nonsslinkws="ss://${shadowsocks_base64e}@${domain}:80?path=/ss-ws&security=none&encryption=none&type=ws#${user}"
+#buat ss GRPC
+sslinkgrpc="ss://${shadowsocks_base64e}@${domain}:443?mode=gun&security=tls&encryption=none&type=grpc&serviceName=ss-grpc&sni=bug.com#${user}"
+nonsslinkgrpc="ss://${shadowsocks_base64e}@${domain}:80?mode=gun&security=none&encryption=none&type=grpc&serviceName=ss-grpc&sni=bug.com#${user}"
+#################################################
+
+
+
+#.                 RESTART SSRJS
+#################################################
+rm -rf /tmp/log
+rm -rf /tmp/log1
+#################################################
+
+
+
+#.             DETAIL CONFIG AKUN
+#################################################
+# Create Dir Untuk Menyimpan Data Akun
+mkdir -p /detail/ssr/
+# // Simpan Detail Akun User
+cat > /detail/ssr/$user.txt <<-END
+——————————————————————————————————————— 
+         Shadowsocks Account
+———————————————————————————————————————
+Username         : $user
+Quota            : $Quota Gb
+Limit ip         : $iplimit Devic
+Expiry in        : $masaaktif Day
+———————————————————————————————————————
+Port No Grpc     : 80-2082-8880
+Port Grpc        : 443-8443-2095
+Network          : ws/grpc
+Cipers           : aes-128-gcm
+patch            : ws/grpc/Wildcard
+Uuid Sadowsok    : ${uuid}
+———————————————————————————————————————
+Link Grpc        : ${sslinkgrpc}
+———————————————————————————————————————
+Link no Grpc     : ${nonsslinkgrpc}
+———————————————————————————————————————
+Link Ws          : ${sslinkws}
+———————————————————————————————————————
+Open Clash       : https://${domain}:81/ssr-$user.txt"
+———————————————————————————————————————
+END
+
+
+function Send_Notif(){
+KEY_TELE=$(sed -n '1p' /root/.notifbot | awk '{print $1}')
+URL="https://api.telegram.org/bot$KEY_TELE/sendMessage"
+ID_TELE=$(sed -n '2p' /root/.notifbot | awk '{print $1}')
+TIMES="10"
+
+# // MEMBER NOTIF KE TELEGRAM HASIL CEEATE
+TEXT="
+<code>———————————————————————————————————————</code>
+<code>  🟢Shadowsocks successfully created🟢 </code>
+<code>———————————————————————————————————————</code>
+<code> USERNAME : $user        </code>
+<code> LIMIT IP : $iplimit ip  </code>
+<code> QUOTA    : $Quota Gb    </code>
+<code> ISP VPS  : $ISP         </code>
+<code>———————————————————————————————————————</code>
+<code> EXPIRED  : $exp Day     </code>
+<code>———————————————————————————————————————</code>
+<code> DOMAIN   : $domain      </code>
+<code>———————————————————————————————————————</code>
+<code>       Script Lunatic Tunneling        </code>
+<code>         Thanks Have ordered           </code>
+<code>———————————————————————————————————————</code>
+"
+
+#.  MEMBERI NOTIF KE TELE SETELAH AKUN DI BUAT
+#################################################
+curl -s --max-time $TIMES -d "chat_id=$ID_TELE&disable_web_page_preview=1&text=$TEXT&parse_mode=html" $URL
+#################################################
+}
+
+Send_Notif
+
+
+
+
+
+
+#.              OPENCLASH
+#################################################
+
+cat > /var/www/html/ssr-user.txt <<-END
+
+# Format Shadowsocks GO/WS
+
+- name: Shadowsocks-$user
+  server: ${domain}
+  port: 80
+  type: trojan
+  password: ${uuid}
+  network: ws
+  sni: ${domain}
+  skip-cert-verify: true
+  udp: true
+  ws-opts:
+    path: /trojan-ws
+    headers:
+        Host: ${domain}
+
+# Format Shadowsocks gRPC / Tls
+
+- name: Shadowsocks-$user
+  type: trojan
+  server: ${domain}
+  port: 443
+  password: ${uuid}
+  udp: true
+  sni: ${domain}
+  skip-cert-verify: true
+  network: grpc
+  grpc-opts:
+    grpc-service-name: trojan-grpc
+END
+cat > /var/www/html/sodosokws-$user.txt <<-END
+{ 
+ "dns": {
+    "servers": [
+      "8.8.8.8",
+      "8.8.4.4"
+    ]
+  },
+ "inbounds": [
+   {
+      "port": 10808,
+      "protocol": "socks",
+      "settings": {
+        "auth": "noauth",
+        "udp": true,
+        "userLevel": 8
+      },
+      "sniffing": {
+        "destOverride": [
+          "http",
+          "tls"
+        ],
+        "enabled": true
+      },
+      "tag": "socks"
+    },
+    {
+      "port": 10809,
+      "protocol": "http",
+      "settings": {
+        "userLevel": 8
+      },
+      "tag": "http"
+    }
+  ],
+  "log": {
+    "loglevel": "none"
+  },
+  "outbounds": [
+    {
+      "mux": {
+        "enabled": true
+      },
+      "protocol": "shadowsocks",
+      "settings": {
+        "servers": [
+          {
+            "address": "$domain",
+            "level": 8,
+            "method": "$cipher",
+            "password": "$uuid",
+            "port": 443
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "ws",
+        "security": "tls",
+        "tlsSettings": {
+          "allowInsecure": true,
+          "serverName": "isi_bug_disini"
+        },
+        "wsSettings": {
+          "headers": {
+            "Host": "$domain"
+          },
+          "path": "/ss-ws"
+        }
+      },
+      "tag": "proxy"
+    },
+    {
+      "protocol": "freedom",
+      "settings": {},
+      "tag": "direct"
+    },
+    {
+      "protocol": "blackhole",
+      "settings": {
+        "response": {
+          "type": "http"
+        }
+      },
+      "tag": "block"
+    }
+  ],
+  "policy": {
+    "levels": {
+      "8": {
+        "connIdle": 300,
+        "downlinkOnly": 1,
+        "handshake": 4,
+        "uplinkOnly": 1
+      }
+    },
+    "system": {
+      "statsOutboundUplink": true,
+      "statsOutboundDownlink": true
+    }
+  },
+  "routing": {
+    "domainStrategy": "Asls",
+"rules": []
+  },
+  "stats": {}
+}
+END
+cat > /var/www/html/sodosokgrpc-$user.txt <<-END
+{
+    "dns": {
+    "servers": [
+      "8.8.8.8",
+      "8.8.4.4"
+    ]
+  },
+ "inbounds": [
+   {
+      "port": 10808,
+      "protocol": "socks",
+      "settings": {
+        "auth": "noauth",
+        "udp": true,
+        "userLevel": 8
+      },
+      "sniffing": {
+        "destOverride": [
+          "http",
+          "tls"
+        ],
+        "enabled": true
+      },
+      "tag": "socks"
+    },
+    {
+      "port": 10809,
+      "protocol": "http",
+      "settings": {
+        "userLevel": 8
+      },
+      "tag": "http"
+    }
+  ],
+  "log": {
+    "loglevel": "none"
+  },
+  "outbounds": [
+    {
+      "mux": {
+        "enabled": true
+      },
+      "protocol": "shadowsocks",
+      "settings": {
+        "servers": [
+          {
+            "address": "$domain",
+            "level": 8,
+            "method": "$cipher",
+            "password": "$uuid",
+            "port": 443
+          }
+        ]
+      },
+      "streamSettings": {
+        "grpcSettings": {
+          "multiMode": true,
+          "serviceName": "ss-grpc"
+        },
+        "network": "grpc",
+        "security": "tls",
+        "tlsSettings": {
+          "allowInsecure": true,
+          "serverName": "isi_bug_disini"
+        }
+      },
+      "tag": "proxy"
+    },
+    {
+      "protocol": "freedom",
+      "settings": {},
+      "tag": "direct"
+    },
+    {
+      "protocol": "blackhole",
+      "settings": {
+        "response": {
+          "type": "http"
+        }
+      },
+      "tag": "block"
+    }
+  ],
+  "policy": {
+    "levels": {
+      "8": {
+        "connIdle": 300,
+        "downlinkOnly": 1,
+        "handshake": 4,
+        "uplinkOnly": 1
+      }
+    },
+    "system": {
+      "statsOutboundUplink": true,
+      "statsOutboundDownlink": true
+    }
+  },
+  "routing": {
+    "domainStrategy": "Asls",
+"rules": []
+  },
+  "stats": {}
+}
+END
+systemctl reload xray >/dev/null 2>&1
+service cron restart >/dev/null 2>&1
+systemctl restart ssrjs
+systemctl restart xray
+clear
+
+
+
+
+
+
+function Details_Account() {
+baris_panjang
+echo -e "\033[37m SHADOWSOCKS \033[0m"
+echo -e "\033[37m"
+echo -e " Remarks     : ${user}"
+echo -e " Domain      : ${domain}"
+echo -e " User Quota  : ${Quota} GB"
+echo -e " Limit IP    : ${iplimit}"
+echo -e " Port TLS    : 443-900"
+echo -e " Password    : ${uuid}"
+echo -e " Cipers      : aes-128-gcm"
+echo -e " Network     : ws/grpc"
+echo -e " Path        : /ss-ws"
+echo -e " ServiceName : ss-grpc"
+echo -e "\033[0m"
+}
+
+
+
+
+
+
+function Link_Json() {
+baris_panjang
+echo -e " Link WS TLS : ${sslinkws}"
+baris_panjang
+echo -e " Link WS     : ${nonsslinkws}"
+baris_panjang
+echo -e " Link GRPC   : ${sslinkgrpc}"
+baris_panjang
+echo -e " Save Account: https://$domain:81/sodosokws-$user.txt"
+baris_panjang
+}
+
+
+
+
+
+function Details_Expiry() {
+echo -e "\033[33m Expiry in   : $masaaktif Day \033[0m "
+}
+
+
+
+Lunatic_Banner
+Details_Account
+Link_Json
+Details_Expiry
+Sc_Credit

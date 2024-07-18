@@ -1,0 +1,63 @@
+#!/bin/bash
+clear
+# // color format 38
+CC='\e[38;5;14m'  # 
+LO='\e[38;5;162m' # PURPLE HACKER
+UK='\e[38;5;99m'  # UNGU KOLOT
+BK='\e[38;5;196m' # BEREM KOLOT 
+R1='\e[38;5;155m' # HEJO SEMU BODAS
+R2='\e[38;5;49m'  # HEJO LIME / APEL
+BC='\e[38;5;195m' # BODAS CERAH PISAN
+HU='\e[38;5;115m' # HEJO SEMU ABU
+UB='\e[38;5;147m' # UNGU KABODASAN
+KT='\e[38;5;187m' # KONENG TARIGU
+# // color fromat 5 
+BlueCyan='\e[5;36m'
+WhiteBe='\e[5;37m'
+GreenBe='\e[5;32m'
+Xark='\e[0m'
+
+
+
+function Account_Banner() {
+clear
+  echo -e "${LO} ┌━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┐${Xark} "
+  echo -e "${R1}            XRAY MANAGER             ${Xark} "
+  echo -e "${LO} └━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┘${Xark} "
+}
+
+
+
+function BR1() {
+  echo -e "${LO} ┌━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┐${Xark} "
+}
+
+function BR2() {
+  echo -e "${LO} └━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┘${Xark} "
+}
+
+
+function Menu_Features() {
+  BR1
+  echo -e "\e[38;5;49m │\e[92;1m[1]•\e[97;1m VLESS MENU  "
+  echo -e "\e[38;5;49m │\e[92;1m[2]•\e[97;1m VMESS MENU  "
+  echo -e "\e[38;5;49m │\e[92;1m[3]•\e[97;1m SDWSK MENU  "
+  echo -e "\e[38;5;49m │\e[92;1m[4]•\e[97;1m TRJAN MENU  "
+  echo -e "\e[38;5;49m │\e[92;1m[x]•\e[0;31m EXIT ${Xark}    "
+  BR2
+  echo -e ""
+}
+
+# // Call Function
+Account_Banner
+Menu_Features
+
+# // Select Display
+read -p "   Just Input 1-4 or xx :  " Ltt
+case $Ltt in
+01 | 1) clear ; m-vle ;;
+02 | 2) clear ; m-vme ;;
+03 | 3) clear ; m-ssr ;;
+04 | 4) clear ; m-tro ;;
+*) exit ;;
+esac

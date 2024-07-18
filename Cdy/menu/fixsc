@@ -1,0 +1,319 @@
+#!/bin/bash
+
+clear
+domain=$(cat /etc/xray/domain)
+
+echo -e "\e[92;1m Create Acces.log \e[0m"
+
+touch /var/log/xray/accessssr.log
+touch /var/log/xray/accesstro.log
+touch /var/log/xray/accessvme.log
+touch /var/log/xray/accessvle.log
+touch /var/log/xray/errorvme.log
+touch /var/log/xray/errorvle.log
+touch /var/log/xray/errortro.log
+touch /var/log/xray/errorssr.log
+
+
+touch /var/log/xray/ssr/accessssr.log
+touch /var/log/xray/tro/accesstro.log
+touch /var/log/xray/vme/accessvme.log
+touch /var/log/xray/vle/accessvle.log
+touch /var/log/xray/vme/errorvme.log
+touch /var/log/xray/vle/errorvle.log
+touch /var/log/xray/tro/errortro.log
+touch /var/log/xray/ssr/errorssr.log
+
+sleep 3
+
+echo -e "\e[92;1m Create Config json \e[0m"
+
+CONFIG="https://raw.githubusercontent.com/arismaramar/ex-fodder/main/"
+#########
+wget -O /etc/xray/vme.json "${CONFIG}vme.json" >/dev/null 2>&1
+wget -O /etc/xray/vle.json "${CONFIG}vle.json" >/dev/null 2>&1
+wget -O /etc/xray/tro.json "${CONFIG}tro.json" >/dev/null 2>&1
+wget -O /etc/xray/ssr.json "${CONFIG}ssr.json" >/dev/null 2>&1
+
+sleep 3
+
+echo -e "\e[92;1m Create Service Json \e[0m"
+
+cat >/etc/systemd/system/vmejs.service <<EOF
+Description=Xray Service
+Documentation=https://github.com
+After=network.target nss-lookup.target
+[Service]
+User=www-data
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+NoNewPrivileges=true
+ExecStart=/usr/local/bin/xray run -config /etc/xray/vme.json
+Restart=on-failure
+RestartPreventExitStatus=23
+filesNPROC=10000
+filesNOFILE=1000000
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat >/etc/systemd/system/vlejs.service <<EOF
+Description=Xray Service
+Documentation=https://github.com
+After=network.target nss-lookup.target
+[Service]
+User=www-data
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+NoNewPrivileges=true
+ExecStart=/usr/local/bin/xray run -config /etc/xray/vle.json
+Restart=on-failure
+RestartPreventExitStatus=23
+filesNPROC=10000
+filesNOFILE=1000000
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat >/etc/systemd/system/trojs.service <<EOF
+Description=Xray Service
+Documentation=https://github.com
+After=network.target nss-lookup.target
+[Service]
+User=www-data
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+NoNewPrivileges=true
+ExecStart=/usr/local/bin/xray run -config /etc/xray/tro.json
+Restart=on-failure
+RestartPreventExitStatus=23
+filesNPROC=10000
+filesNOFILE=1000000
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat >/etc/systemd/system/ssrjs.service <<EOF
+Description=Xray Service
+Documentation=https://github.com
+After=network.target nss-lookup.target
+[Service]
+User=www-data
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+NoNewPrivileges=true
+ExecStart=/usr/local/bin/xray run -config /etc/xray/ssr.json
+Restart=on-failure
+RestartPreventExitStatus=23
+filesNPROC=10000
+filesNOFILE=1000000
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sleep 3
+
+
+echo -e "\e[92;1m Create Autokill Xray \e[0m"
+
+mkdir -p /luna/run
+# // Menjalankan Pungsi Dengan Crontab
+########################################
+### MEMASANG PUNGSI AUTO KE CRONTAB ###
+########################################
+echo " Memasang autobackup ke crontab "
+# // Jalankan pungsi Limit-ssh setiap 1 menit
+echo "*/50 * * * *  root /usr/local/sbin/otwbackup" >>/etc/crontab
+sleep 1
+echo " Memasang limit ssh ke crontab "
+# // Jalankan pungsi Limit-ssh setiap 1 menit
+echo "*/1 * * * *  root /luna/run/limit-ssh" >>/etc/crontab
+sleep 1
+echo " Memasang xp ke crontab "
+# // Delete Account Trial Yang Sudah Expired Setiap 30 Menit
+echo "*/30 * * * *  root /usr/local/sbin/xp" >>/etc/crontab
+echo "*/1 * * * * root /usr/local/sbin/delexp" >>/etc/crontab
+sleep 1
+echo " Memasang Autokill ssh ke crontab "
+echo "*/1 * * * *  root /luna/run/kill-ssh $iplimit" >>/etc/cron.d
+sleep 1
+#echo " memasang Autorestart service "
+#echo "*/1 * * * * root /usr/local/sbin/res-xray" >> /etc/crontab
+#sleep 1
+clear
+########################################
+#### MEMASANG PUNGSI AUTO KE CRON.D ####
+########################################
+cat >/etc/cron.d/autobackup<<-END
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+*/50 * * * * root /usr/local/sbin/otwbackup
+END
+echo "\e[92;1m Memasang limit ssh ke cron.d \e[0m"
+# // Jalankan pungsi Limit-ssh setiap 1 menit
+echo "*/1 * * * *  root /luna/run/limit-ssh" >>/etc/cron.d/limit-ssh
+sleep 1
+echo "\e[92;1m Memasang xp ke cron.d \e[0m"
+# // Delete Account Trial Yang Sudah Expired Setiap 30 Menit
+echo "*/1 * * * *  root /usr/local/sbin/xp" >>/etc/cron.d/xp
+sleep 1
+echo "\e[92;1m Memasang autokill ssh ke cron.d \e[0m"
+echo "*/1 * * * *  root /luna/run/kill-ssh" >>/etc/cron.d/kill-ssh
+echo "*/1 * * * * root /usr/local/sbin/delexp" >>/etc/cron.d/delexp
+sleep 1
+echo " memasang Auto delete account "
+echo "*/30 * * * * root /usr/local/sbin/xp-all" >> /etc/cron.d/autodeleteXP
+sleep 1
+systemctl daemon-reload
+sleep 2
+clear
+echo -e "\e[93;1mIzinkan Service \e[0m"
+# // Mengizinkan Service
+systemctl enable xray
+systemctl enable nginx
+systemctl enable udp-mini
+systemctl enable limit-ssh
+systemctl enable limit
+systemctl enable cron
+systemctl enable noobzvpns
+echo -e "\e[93;1mJalankan Service \e[0m"
+# // Menjalankan Service
+systemctl restart xray
+systemctl restart nginx
+systemctl restart limit-ssh
+systemctl restart udp-mini
+systemctl restart cron
+systemctl restart noobzvpns
+clear
+echo -e "\e[92;1m Succesfully installed All Service \e[0m"
+sleep 2
+clear
+cd
+
+echo -e "\e[92;1m Create AutoKiller And Locked \e[0m"
+DIR="https://raw.githubusercontent.com/arismaramar/ex-fodder/main/"
+wget -q -O /etc/systemd/system/kill-vme.service "${DIR}kill-vme.service" && chmod +x kill-vme.service >/dev/null 2>&1
+wget -q -O /etc/systemd/system/kill-vle.service "${DIR}kill-vle.service" && chmod +x kill-vle.service >/dev/null 2>&1
+wget -q -O /etc/systemd/system/kill-tro.service "${DIR}kill-tro.service" && chmod +x kill-tro.service >/dev/null 2>&1
+wget -q -O /etc/systemd/system/kill-ssr.service "${DIR}kill-ssr.service" && chmod +x kill-ssr.service >/dev/null 2>&1
+
+# // service Kuota Xray
+cat >/etc/systemd/system/quota-ssr.service << EOF
+[Unit]
+Description=Limit Quota Shadowsocks Accounts Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/sbin/quotassr
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat >/etc/systemd/system/quota-tro.service << EOF
+[Unit]
+Description=Limit Quota Trojan Accounts Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/sbin/quotatro
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat >/etc/systemd/system/quota-vme.service << EOF
+[Unit]
+Description=Limit Quota Vmess Accounts Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/sbin/quotavle
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat >/etc/systemd/system/quota-vle.service << EOF
+[Unit]
+Description=Limit Quota Vless Accounts Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/sbin/quotavme
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+chmod +x /etc/systemd/system/kill-vme.service
+chmod +x /etc/systemd/system/kill-vle.service
+chmod +x /etc/systemd/system/kill-tro.service
+chmod +x /etc/systemd/system/kill-ssr.service
+chmod +x /etc/systemd/system/quota-tro.service
+chmod +x /etc/systemd/system/quota-ssr.service
+chmod +x /etc/systemd/system/quota-vle.service
+chmod +x /etc/systemd/system/quota-vme.service
+
+clear
+echo -e "\e[92;1m RESTART TROJAN QUOTA\e[0m"
+systemctl restart quota-tro
+sleep 1
+echo -e "\e[92;1m RESTART SDWSK QUOTA \e[0m"
+systemctl restart quota-ssr
+sleep 1
+echo -e "\e[92;1m RESTART VMESS QUOTA \e[0m"
+systemctl restart quota-vme
+sleep 1
+echo -e "\e[92;1m RESTART VLESS QUOTA \e[0m"
+systemctl restart quota-vle
+sleep 1
+echo -e "\e[92;1m RESTART VLESS KILL \e[0m"
+systemctl restart kill-vle
+sleep 1
+echo -e "\e[92;1m RESTART VMESS KILL \e[0m"
+systemctl restart kill-vme
+sleep 1
+echo -e "\e[92;1m RESTART TROJAN KILL \e[0m"
+systemctl restart kill-tro
+sleep 1
+echo -e "\e[92;1m RESTART SDWSK KILL \e[0m"
+systemctl restart kill-ssr
+sleep 1
+echo -e "\e[92;1m MENJALANKAN SERVICE TROJAN QUOTA \e[0m"
+systemctl enable quota-tro
+sleep 1
+echo -e "\e[92;1m MENJALANKAN SERVICE SDWSK QUOTA \e[0m"
+systemctl enable quota-ssr
+sleep 1
+echo -e "\e[92;1m MENJALANKAN SERVICE VLESS QUOTA \e[0m"
+systemctl enable quota-vle
+sleep 1
+echo -e "\e[92;1m MENJALANKAN SERVICE VMESS QUOTA \e[0m"
+systemctl enable quota-vme
+sleep 1
+echo -e "\e[92;1m MENJALANKAN SERVICE VMESS KILL \e[0m"
+systemctl enable kill-vme
+sleep 1
+echo -e "\e[92;1m MENJALANKAN SERVICE VLESS KILL \e[0m"
+systemctl enable kill-vle
+sleep 1
+echo -e "\e[92;1m MENJALANKAN SERVICE TRJAN KILL \e[0m"
+systemctl enable kill-tro
+sleep 1
+echo -e "\e[92;1m MENJALANKAN SERVICE SDWSK KILL \e[0m"
+systemctl enable kill-ssr
+sleep 2
+clear
+
+
+read -p "Enter Back To Menu"
+menu

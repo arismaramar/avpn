@@ -1,0 +1,55 @@
+#!/bin/bash
+
+# Variabel
+bottoken=$(sed -n '1p' /root/.bckupbot | awk '{print $1}')
+adminid=$(sed -n '2p' /root/.bckupbot | awk '{print $1}')
+InputPass=$(sed -n '3p' /root/.bckupbot | awk '{print $1}')
+dateToday=$(date +%Y-%m-%d)
+IP=$(hostname -I | awk '{print $1}')
+Name=$(hostname)
+
+# Buat direktori backup
+mkdir -p /root/backup
+
+# Backup file-file penting
+cp /etc/passwd backup/
+cp /etc/group backup/
+cp /etc/shadow backup/
+cp /etc/gshadow backup/
+cp -r /etc/lunatic/limit backup/limit
+cp -r /etc/lunatic backup/lunatic
+cp -r /etc/vmess backup/vmess
+cp -r /etc/trojan backup/trojan
+cp -r /etc/vless backup/vless
+cp -r /etc/shadowsock backup/shadowsock
+cp -r /var/lib/LT/ backup/LT
+cp -r /etc/xray backup/xray
+cp -r /var/www/html backup/html
+
+# Zip dan enkripsi backup
+cd /root
+zip -rP "$InputPass" "$IP-$Name-$dateToday.zip" backup >/dev/null 2>&1
+
+# Kirim backup via Telegram
+curl -Ss --request POST \
+    --url "https://api.telegram.org/bot${bottoken}/sendDocument?chat_id=${adminid}&caption=Here Your Backup Today : ${dateToday}" \
+    --header 'content-type: multipart/form-data' \
+    --form document=@"/root/$IP-$Name-$dateToday.zip" >/root/t1
+
+fileId=$(grep -o '"file_id":"[^"]*' /root/t1 | grep -o '[^"]*$')
+
+curl -Ss --request GET \
+    --url "https://api.telegram.org/bot${bottoken}/getfile?file_id=${fileId}" >/root/t1
+
+filePath=$(grep -o '"file_path":"[^"]'* /root/t1 | grep -o '[^"]*$')
+
+curl -Ss --request GET \
+    --url "https://api.telegram.org/bot${bottoken}/sendMessage?chat_id=${adminid}&text=File ID   : <code>${fileId}</code>&parse_mode=html" &>/dev/null
+curl -Ss --request GET \
+    --url "https://api.telegram.org/bot${bottoken}/sendMessage?chat_id=${adminid}&text=File Path : <code>${filePath}</code>&parse_mode=html" &>/dev/null
+
+# Bersihkan file sementara
+rm -rf /root/backup
+rm -r /root/$IP-$Name-$dateToday.zip
+rm -f /root/t1
+clear

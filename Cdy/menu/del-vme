@@ -1,0 +1,140 @@
+#!/bin/bash
+dateFromServer=$(curl -v --insecure --silent https://google.com/ 2>&1 | grep Date | sed -e 's/< Date: //')
+biji=`date +"%Y-%m-%d" -d "$dateFromServer"`
+RED='\033[0;31m'
+NC='\033[0m'
+GREEN='\033[0;32m'
+ORANGE='\033[0;33m'
+BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'
+LIGHT='\033[0;37m'
+red='\e[1;31m'
+green='\e[0;32m'
+NC='\e[0m'
+green() { echo -e "\\033[32;1m${*}\\033[0m"; }
+red() { echo -e "\\033[31;1m${*}\\033[0m"; }
+clear
+
+yellow="\033[0;33m"
+ungu="\033[0;35m"
+Red="\033[91;1m"
+Cyan="\033[96;1m"
+Xark="\033[0m"
+BlueCyan="\033[5;36m"
+WhiteBe="\033[5;37m"
+GreenBe="\033[5;32m"
+YellowBe="\033[5;33m"
+BlueBe="\033[5;34m"
+# . Liner 
+function Liner() {
+  echo -e "\e[33;1m ——————————————————————————————————— ${Xark} "
+}
+
+function Lunatic_Banner() {
+clear
+Liner
+echo -e "\e[92;1m           ANGGUNvpn TUNNELING      ${Xark} "
+Liner
+}
+
+function Sc_Credit(){
+sleep 1
+Liner
+echo -e "\033[1;33m      Terimakasih Telah Menggunakan \033[0m"
+echo -e "\033[1;33m             Script Credit \033[0m"
+echo -e "\033[1;33m           ANGGUNvpn Tunneling  \033[0m"
+Liner
+exit 1
+}
+
+# jalankan loading : sleep 0.8 & loading $!
+loading() {
+  local pid=$1
+  local delay=0.1
+  local spin='-\|/'
+
+  while ps -p $pid > /dev/null; do
+    local temp=${spin#?}
+    printf "[%c] " "$spin"
+    local spin=$temp${spin%"$temp"}
+    sleep $delay
+    printf "\b\b\b\b\b\b"
+  done
+
+  printf "    \b\b\b\b"
+}
+
+function Daftar_Account() {
+grep -E "^#vme-user# " "/etc/xray/vme.json" | cut -d ' ' -f 2-3 | column -t | sort | uniq
+}
+
+
+
+
+NUMBER_OF_CLIENTS=$(grep -c -E "^#vme-user# " "/etc/xray/vme.json")
+	if [[ ${NUMBER_OF_CLIENTS} == '0' ]]; then
+		Liner
+        Lunatic_Banner
+        Liner
+		echo ""
+		echo -e "${Red} Name Is Wrong !!! ${Xark} "
+		echo ""
+	    Liner
+	    Sc_Credit
+		read -n 1 -s -r -p "Press any key to back on menu"
+        menu
+	fi
+
+	clear
+	Liner
+    echo -e "${ungu}           DELETE VMESS      ${Xark}"
+    Liner
+# Baca nama pengguna dari vme.json, pisahkan username dan tanggal expired, lalu hilangkan duplikat
+users=$(grep -E "^#vme-user# " "/etc/xray/vme.json" | sed -E 's/^#vme-user# ([^ ]+).*/\1/' | awk '!seen[$0]++')
+
+
+# Tampilkan nama pengguna dengan nomor urut
+############################################
+echo ""
+Liner
+echo ""
+i=1
+for user in $users; do
+    echo "$i) $user"
+    ((i++))
+done
+echo ""
+Liner
+echo ""
+############################################
+read -p " Just input Number: " number
+
+# Dapatkan username berdasarkan nomor yang dipilih
+selected_user=$(echo "$users" | sed -n "${number}p")
+
+if [ -z "$selected_user" ]; then
+    echo -e "\e[31;1m number is missing or incorrect\e[0m"
+    exit 1
+sleep 0.8 & loading $!
+    else
+    exp=$(grep -wE "^#vme-user# $selected_user" "/etc/xray/vme.json" | cut -d ' ' -f 3 | sort | uniq)
+    sed -i "/^#vme-user# $selected_user $exp/,/^},{/d" /etc/xray/vme.json
+    sed -i "/^#vme# $selected_user $exp/,/^},{/d" /etc/vmess/.vmess.db
+    rm -rf /etc/vmess/$selected_user
+    rm -rf /etc/lunatic/limit/vmess/ip/$selected_user
+    rm -rf /detail/vme/$selected_user.txt
+    rm -rf /var/www/html/$selected_user.txt
+    systemctl restart xray > /dev/null 2>&1
+    systemctl restart vmejs > /dev/null 2>&1
+    clear
+    Lunatic_Banner
+    Liner
+    echo -e "${GreenBe} Successfully ${Xark} "
+    echo ""
+    echo -e "\e[0;36m Client Name : $selected_user ${Xark}"
+    echo -e "\e[0;36m Expired On  : $exp           ${Xark}"
+    echo ""
+    Liner
+    Sc_Credit
+    fi
