@@ -73,7 +73,6 @@ for user in ${data[@]}
       sed -i "/^#! $user $exp/d" /etc/trojan/.trojan.db
        total=$(con ${Usage})
        send-log
-	   rm -rf /etc/limit/trojan/${user}
        rm -f /etc/lunatic/limit/trojan/ip/$user
        rm -f /etc/limit/trojan/$user
        rm -f /etc/limit/trojan/quota/$user
