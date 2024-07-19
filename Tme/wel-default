@@ -20,10 +20,10 @@ clear
 ######################################
 # // USERNAME IZIN IPP
 rm -f /usr/bin/user
-username=$(curl -sS https://raw.githubusercontent.com/lunatixmyscript/lunaip/main/ip | grep $MYIP | awk '{print $2}')
+username=$(curl -sS https://raw.githubusercontent.com/arismaramar/izin/main/ip | grep $MYIP | awk '{print $2}')
 echo "$username" >/usr/bin/user
 rm -f /usr/bin/e
-valid=$(curl -sS https://raw.githubusercontent.com/lunatixmyscript/lunaip/main/ip | grep $MYIP | awk '{print $3}')
+valid=$(curl -sS https://raw.githubusercontent.com/arismaramar/izin/main/ip | grep $MYIP | awk '{print $3}')
 echo "$valid" > /usr/bin/e
 
 clear
@@ -93,7 +93,7 @@ Suffix='\e[0m'
 function Lunatic_Banner() {
 clear
 echo -e "\e[38;5;162m  ┌━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┐\033[0m"
-echo -e "\e[38;5;162m  │\e[0m \033[44;1;97;1m              LUNATIC TUNNELING             \033[0m \e[38;5;162m│\e[0m"
+echo -e "\e[38;5;162m  │\e[0m \033[44;1;97;1m           ANGGUNvpn TUNNELING             \033[0m \e[38;5;162m│\e[0m"
 echo -e "\e[38;5;162m  └━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┘\033[0m "
 }
 
